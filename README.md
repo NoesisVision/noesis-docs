@@ -1,41 +1,80 @@
-# Website
+# Noesis Vision - Technical Documentation
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+This is the technical documentation website for [Noesis Vision](https://noesis.vision) startup, built using [Docusaurus](https://docusaurus.io/).
 
-## Installation
+## 🚀 Quick Start
 
-```bash
-yarn
-```
+### Requirements
 
-## Local Development
+- Node.js 18 or newer
+- npm
 
-```bash
-yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Build
+### Installation
 
 ```bash
-yarn build
+npm install
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-## Deployment
-
-Using SSH:
+### Development Mode
 
 ```bash
-USE_SSH=true yarn deploy
+npm start
 ```
 
-Not using SSH:
+The website will be available at [http://localhost:3000](http://localhost:3000).
+
+### Build
 
 ```bash
-GIT_USER=<Your GitHub username> yarn deploy
+npm run build
 ```
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+### Preview Built Website
+
+```bash
+npm run serve
+```
+
+## 📚 Project Structure
+
+- `docs/` - Main documentation
+- `blog/` - Technical blog
+- `src/` - React components and styles
+- `static/` - Static files (images, icons)
+
+## 🌐 GitHub Pages Deployment
+
+The website is automatically deployed to GitHub Pages at: [https://noesisvision.github.io/noesis-docs](https://noesisvision.github.io/noesis-docs)
+
+### Automatic Deployment
+
+1. Push changes to the `main` branch
+2. GitHub Actions automatically builds and deploys the website
+3. Deployment takes a few minutes
+
+### Manual Deployment (optional)
+
+```bash
+npm run deploy
+```
+
+## 🔧 Configuration
+
+Main configuration is located in `docusaurus.config.ts`.
+
+## 📝 Content Editing
+
+- **Documentation**: Edit files in the `docs/` folder
+- **Blog**: Edit files in the `blog/` folder
+- **Homepage**: Edit `src/pages/index.tsx`
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a branch for new functionality
+3. Make changes
+4. Create a Pull Request
+
+## 📄 License
+
+Copyright © 2024 Noesis Vision. Built with Docusaurus.
