@@ -6,8 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
-# Required permissions for GitHub Pages deployment
+# Allow this job to clone the repo and create a page deployment
 permissions:
+  contents: read
+  pages: write
   id-token: write
 
 jobs:
@@ -15,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout your repository using git
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -30,22 +32,17 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./build
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
