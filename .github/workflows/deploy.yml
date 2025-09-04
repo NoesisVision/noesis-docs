@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+# Required permissions for GitHub Pages deployment
+permissions:
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest

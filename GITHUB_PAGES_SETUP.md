@@ -19,7 +19,7 @@
 1. In **Settings** → **Actions** → **General**
 2. Make sure **Actions permissions** is set to **Allow all actions and reusable workflows**
 
-**✅ That's it!** The workflow I created works with default permissions (just like your `noesis-landing-page` project).
+**ℹ️ Note:** The workflow requires `id-token: write` permission for GitHub Pages deployment. This is automatically handled by the workflow configuration.
 
 ### Step 3: Push Code
 
@@ -60,6 +60,10 @@ From now on, every push to the `main` branch will automatically:
 - Wait a few minutes after deployment
 - Check if GitHub Pages are enabled
 - Verify the URL is correct: `https://noesisvision.github.io/noesis-docs`
+
+### Permission Errors
+- The workflow automatically handles required permissions
+- If you see permission errors, check that GitHub Actions are enabled
 
 ## 📞 Support
 
