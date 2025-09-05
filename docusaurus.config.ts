@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Noesis Vision',
   tagline: 'Technical documentation',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/noesis-logo-png.png',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -41,32 +41,13 @@ const config: Config = {
       'classic',
       {
         docs: {
-          sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/noesisvision/noesis-docs/tree/main/',
-        },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/noesisvision/noesis-docs/tree/main/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
+          sidebarPath: './sidebars.ts'
         },
         theme: {
           customCss: './src/css/custom.css',
         },
       } satisfies Preset.Options,
-    ],
+    ]
   ],
 
   themeConfig: {
@@ -76,7 +57,7 @@ const config: Config = {
       title: 'Noesis Vision',
       logo: {
         alt: 'Noesis Vision Logo',
-        src: 'img/logo.svg',
+        src: 'img/noesis-logo-png.png',
       },
       items: [
         {
@@ -85,15 +66,21 @@ const config: Config = {
           position: 'left',
           label: 'Documentation',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/noesisvision/noesis-docs',
-          label: 'GitHub',
-          position: 'right',
+          type: 'doc',
+          docId: 'changelog',
+          position: 'left',
+          label: 'Changelog',
         },
         {
           href: 'https://noesis.vision',
           label: 'Home',
+          position: 'right',
+        },
+        {href: 'https://noesisvision.substack.com/', label: 'Blog', position: 'right'},
+        {
+          href: 'https://github.com/noesisvision/noesis-docs',
+          label: 'GitHub',
           position: 'right',
         },
       ],
@@ -107,6 +94,10 @@ const config: Config = {
             {
               label: 'Introduction',
               to: '/docs/intro',
+            },
+            {
+              label: 'Changelog',
+              to: '/docs/changelog',
             },
           ],
         },
@@ -128,7 +119,7 @@ const config: Config = {
           items: [
             {
               label: 'Blog',
-              to: '/blog',
+              href: 'https://noesisvision.substack.com/',
             },
             {
               label: 'GitHub',
