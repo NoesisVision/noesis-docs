@@ -1,47 +1,76 @@
 ---
-sidebar_position: 1
+sidebar_position: 0
 ---
 
-# Tutorial Intro
+# Welcome to Noesis
 
-Let's discover **Docusaurus in less than 5 minutes**.
+**Noesis** is a visual map of your code's most important building blocks that unlocks AI's real potential. Cheap, regular scans keep it up to date and predictable, helping product teams see connections, generate complete docs and deliver faster with confidence.
 
-## Getting Started
+## What is Noesis?
 
-Get started by **creating a new site**.
+Noesis automates the process of understanding system architecture through deterministic static analysis combined with AI-enhanced descriptions. It creates precise system maps without AI first, providing a solid foundation that allows you to use AI intelligently and efficiently only where it adds real value - giving you full control over costs and quality.
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+## How It Works
 
-### What you'll need
+Noesis automates the process of understanding system architecture in four simple steps:
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+### 1. [Select your repositories](/docs/setup) 📁
+Point Noesis to the codebase you want to explore.
 
-## Generate a new site
+### 2. [Define conventions with DSL](/docs/configure) 🔧
+Specify your architectural rules and conventions in a lightweight domain-specific language.
 
-Generate a new Docusaurus site using the **classic template**.
+### 3. [Run deterministic static analysis](/docs/configure) 🔍
+Noesis scans the code using static analysis and generates a repeatable map of the system's essential building blocks.
 
-The classic template will automatically be added to your project after you run the command:
+### 4. [Use the map in multiple ways](/docs/explore) 🚀
+Navigate, document, and integrate with AI for comprehensive system understanding.
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+## Multiple Ways to Use Your System Map
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+### Noesis UI
+Navigate interactively through AI-described modules, entry points, and key components to visually explore their connections and analyze your system.
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+### Documentation
+Export Noesis map content to clear, static documentation - share it with clients or integrate with your internal wiki for comprehensive system overview wherever you need it.
 
-## Start your site
+### AI Integration
+Expose the map or documentation to AI agents for more meaningful, context-aware conversations.
 
-Run the development server:
+## Key Features
 
-```bash
-cd my-website
-npm run start
-```
+- **🔒 Secure**: On-premise deployment - your code never leaves your infrastructure
+- **🎯 Deterministic**: Precise system map creation using static code analysis
+- **🤖 AI-Enhanced**: Selective AI usage only where it adds value
+- **📊 Visual**: Interactive diagrams and architecture visualizations
+- **📚 Comprehensive**: Generates detailed documentation automatically
+- **🔧 Configurable**: Flexible DSL for custom architectural patterns
+- **🔄 Repeatable**: Comparable & repeatable analysis across multiple scans
+- **💰 Cost-Optimized**: Full control over AI costs and quality
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+## Real-World Applications
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+Noesis transforms how teams approach complex software challenges:
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- **Project Takeover**: Accelerate onboarding when taking over existing projects
+- **Delivering Documented Software**: Generate up-to-date system documentation automatically
+- **Architecture Audit/Review**: Conduct thorough architecture reviews with complete system visibility
+- **Requirements Preparation**: Bridge technical and business requirements with clear system understanding
+- **Refactoring Planning**: Plan refactoring initiatives with confidence
+- **Knowledge Transfer**: Facilitate smooth knowledge transfer between team members
+
+## Quick Links
+
+- [Installation Guide](/docs/setup)
+- [Configuration Examples](/docs/configure)
+- [UI Overview](/docs/explore)
+- [Changelog](/docs/changelog)
+
+## Need Help?
+
+- Check our [troubleshooting guide](/docs/explore#troubleshooting)
+- Visit our [GitHub repository](https://github.com/noesisvision/noesis)
+- Read the [latest updates](/docs/changelog)
+- Join our [Discord community](https://discord.gg/noesis)
+
+Ready to get started? Begin with [Set-up](/docs/setup) to deploy Noesis on your infrastructure.

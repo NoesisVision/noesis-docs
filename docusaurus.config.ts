@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Noesis Vision',
-  tagline: 'Technical documentation',
+  tagline: 'Automated, reliable visualization and documentation of IT systems',
   favicon: 'img/noesis-logo-png.png',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -54,7 +54,7 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'Noesis Vision',
+      title: 'Noesis',
       logo: {
         alt: 'Noesis Vision Logo',
         src: 'img/noesis-logo-png.png',

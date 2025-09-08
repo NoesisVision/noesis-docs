@@ -9,3 +9,20 @@
   height: 200px;
   width: 200px;
 }
+
+/* Remove underlines from links in feature components */
+.features a {
+  text-decoration: none !important;
+}
+
+.features a:hover {
+  text-decoration: none !important;
+}
+
+.features a:focus {
+  text-decoration: none !important;
+}
+
+.features a:visited {
+  text-decoration: none !important;
+}
