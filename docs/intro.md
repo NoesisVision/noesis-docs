@@ -4,18 +4,22 @@ sidebar_position: 0
 
 # Welcome to Noesis
 
-**Noesis** is a visual map of your code's most important building blocks that unlocks AI's real potential. Cheap, regular scans keep it up to date and predictable, helping product teams see connections, generate complete docs and deliver faster with confidence.
+**Noesis** is an intelligent code architecture documentation platform that helps you understand, visualize, and document your IT systems automatically.
 
 ## What is Noesis?
 
 Noesis automates the process of understanding system architecture through deterministic static analysis combined with AI-enhanced descriptions. It creates precise system maps without AI first, providing a solid foundation that allows you to use AI intelligently and efficiently only where it adds real value - giving you full control over costs and quality.
+
+:::info Current Support
+Noesis currently supports analysis of **.NET repositories**. Support for additional programming languages and frameworks is planned for future releases.
+:::
 
 ## How It Works
 
 Noesis automates the process of understanding system architecture in four simple steps:
 
 ### 1. [Select your repositories](/docs/setup) 📁
-Point Noesis to the codebase you want to explore.
+Point Noesis to your .NET codebase you want to explore.
 
 ### 2. [Define conventions with DSL](/docs/configure) 🔧
 Specify your architectural rules and conventions in a lightweight domain-specific language.
@@ -34,8 +38,8 @@ Navigate interactively through AI-described modules, entry points, and key compo
 ### Documentation
 Export Noesis map content to clear, static documentation - share it with clients or integrate with your internal wiki for comprehensive system overview wherever you need it.
 
-### AI Integration
-Expose the map or documentation to AI agents for more meaningful, context-aware conversations.
+### AI Integration (MCP)
+*Coming soon* - Expose the map or documentation to AI agents via Model Context Protocol (MCP) for more meaningful, context-aware conversations.
 
 ## Key Features
 

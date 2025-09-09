@@ -52,9 +52,9 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/noesis-social-card.png',
     navbar: {
-      title: 'Noesis',
+      title: 'Noesis Vision',
       logo: {
         alt: 'Noesis Vision Logo',
         src: 'img/noesis-logo-png.png',
