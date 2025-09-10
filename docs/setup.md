@@ -2,11 +2,11 @@
 sidebar_position: 1
 ---
 
-# P3 Model .NET - Container Configuration
+# Noesis Vision - Container Configuration
 
 ## Introduction
 
-P3 Model .NET is an advanced source code analysis system with AI integration that supports various language model providers. The system is designed as a containerized application with flexible configuration through environment variables.
+Noesis Vision is an advanced source code analysis system with an optional AI integration that supports various language model providers. The system is designed as a containerized application with flexible configuration through environment variables.
 
 ## Supported APIs and Models
 
@@ -84,7 +84,6 @@ Here are the environment variables which have to be set to use each of listed mo
 | `NOESIS_NoesisLicenseFilePath` | Yes | Path to JWT license file |
 
 
-
 **Notes:**
 - License file must be in JWT format
 - In container, file must be mounted at `/license.jwt`
@@ -94,8 +93,7 @@ Here are the environment variables which have to be set to use each of listed mo
 
 | Variable | Required | Default Value | Description |
 |----------|----------|---------------|-------------|
-| `NOESIS_IsMultiTenant` | No | `false` | Enables multi-tenant mode |
-| `NOESIS_FeatureManagement__AdvancedMode` | No | `false` | Enables advanced mode with additional features |
+| `NOESIS_FeatureManagement__AdvancedMode` | No | `false` | Enables experimental features |
 | `NOESIS_FeatureManagement__FileUpload` | No | `false` | Enables file upload functionality |
 
 ### Logging Configuration
@@ -104,12 +102,6 @@ Here are the environment variables which have to be set to use each of listed mo
 |----------|----------|---------------|-------------|
 | `NOESIS_LogLevel` | No | `Information` | Logging level: `Debug`, `Information`, `Warning`, `Error` |
 
-### Parser Configuration (for Parser container)
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NOESIS_OutputPath` | Yes | Path to output file (JSON) |
-| `NOESIS_System` | Yes | Name of system to analyze |
 
 ## Usage Examples
 
@@ -161,22 +153,8 @@ docker run \
   ghcr.io/noesisvision/vision:latest
 ```
 
-### Parser Container
-
-```bash
-docker run \
-  -v /path/to/config:/app/externalConfig:ro \
-  -v /path/to/sources:/externalSources:ro \
-  -v /path/to/data:/app/data \
-  -e NOESIS_OutputPath=/app/data/output.json \
-  -e NOESIS_System=MySystem \
-  --rm \
-  ghcr.io/noesisvision/parser:latest
-```
 
 ## Container Volumes
-
-### Vision Container
 
 | Volume | Type | Description |
 |--------|------|-------------|
@@ -185,20 +163,12 @@ docker run \
 | `/data` | Read-write | Volume for Noesis Vision managed data (cache, analysis results) |
 | `/license.jwt` | Read-only | JWT license file |
 
-### Parser Container
-
-| Volume | Type | Description |
-|--------|------|-------------|
-| `/app/externalConfig` | Read-only | External configuration directory |
-| `/externalSources` | Read-only | System sources directory |
-| `/app/data` | Read-write | Volume for parser data and analysis results |
 
 ## Notes and Best Practices
 
 ### Security
-1. **API Keys**: Never hardcode API keys in Docker images. Use environment variables or secret management.
-2. **Permissions**: In container, application runs as user `$APP_UID` (default 1000).
-3. **Licenses**: License file must be available in container at `/license.jwt`.
+1. **Permissions**: In container, application runs as user `$APP_UID` (default 1000).
+1. **Licenses**: License file must be available in container at `/license.jwt`.
 
 ### Configuration
 1. **AWS Region**: AWS Bedrock is configured for `us-east-1` region (hardcoded).
