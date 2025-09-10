@@ -105,6 +105,10 @@ const config: Config = {
           title: 'Community',
           items: [
             {
+              label: 'Discord',
+              href: 'https://discord.gg/QF5PMX4Dqg',
+            },
+            {
               label: 'GitHub',
               href: 'https://github.com/noesisvision',
             },
@@ -133,6 +137,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['csharp', 'bash', 'powershell', 'fsharp'],
     },
   } satisfies Preset.ThemeConfig,
 };
