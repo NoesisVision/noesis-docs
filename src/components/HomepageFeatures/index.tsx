@@ -118,13 +118,6 @@ function Feature({title, Svg, description}: FeatureItem) {
           </Link>
         </Heading>
         <p>{description}</p>
-        <Link
-          className="button button--secondary button--sm"
-          to={getDocLink(title)}
-          style={{ marginTop: '1rem' }}
-        >
-          Learn More →
-        </Link>
       </div>
     </div>
   );

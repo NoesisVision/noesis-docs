@@ -1,98 +1,56 @@
+---
+sidebar_position: 5
+---
+
 # Changelog
 
 All notable changes to the Noesis Vision application will be documented in this file.
 
-## [vision/0.3.0-preview10] - 2025-09-03
+## [vision/0.4.0] - Preview
 
-### Improved
-- Enhanced stability of entry point description generation
-- Improved overall system reliability
+### Product Features
 
-## [vision/0.3.0-preview09] - 2025-09-03
+**Code Analysis**
+- Automated source code analysis of .NET 5+ (.NET Core) repositories and extraction of a map of key architecture components structured according to the P3 model
+- Ability to configure analysis using Noesis DSL in .NET using public `Noesis.Parser` packages, which allows to define architecture conventions
+- Integration with Git repositories present on the file system of the host machine
 
-### Improved
-- Fixed stability issues with entry point description creation
-- Enhanced glossary integration reliability
+**Noesis User Interface** 
+- Visualization of the key architecture elements and their relationships in the form of trees, lists and diagrams
+- Supported browsing modes:
+    - By overall modules structure
+    - By application entry point and its dependencies to other elements
+- Each browsing mode includes:
+    - tree of detected elements organized according to the configuration of modules
+    - ability to visualize multiple selected elements in a form of diagram, with ability to filter and reorganize the elements on the diagram.
 
-## [vision/0.3.0-preview08] - 2025-09-02
+**LLM-powered map elements descriptions**
+- Effective bulk generation of so called Domain Glossary - LLM summaries of all mapped elements
+- Extended descriptions of entry points integrated with Domain Glossary
+- Streaming of elements description in the NoesisUI during LLM generation to see the results faster
+- Estimation of Domain Glossary generation cost and displaying it in the UI.
 
-### Improved
-- Fixed stability issues with domain glossary retrieval
-- Enhanced error handling for missing glossary files
+**Variety of LLM Integration**
+- Support for multiple AI models: Amazon Bedrock, Hugging Face, Fireworks
+- Token usage and cost monitoring
 
-## [vision/0.3.0-preview07] - 2025-09-02
 
-### Added
-- **Domain Glossary System**: Complete domain glossary generation and management
-- **New AI Models**: Support for Hugging Face models, QwenCoder7B, and Haiku
-- **Amazon Claude Integration**: Added support for Amazon Claude models with structured output
-- **Token Usage Monitoring**: Track AI model usage and costs
-- **Enhanced UI**: Improved glossary display and user interface
+**Deployment & Infrastructure**
+- Noesis Vision application is deployed as a Docker Container 
+- Ability to configure the container using mounted configuration and environment variables
+- Ability to mount persistent storage unit for caches and results
 
-### Changed
-- **Default AI Model**: Haiku is now the default AI model
-- **Storage Management**: Centralized storage across the application
 
-### Improved
-- Enhanced stability of element description generation
-- Improved glossary display and interaction
+### In Development
 
-## [vision/0.3.0-preview06] - 2025-08-14
+**Documentation Export**
+- Extended capabilities for exporting generated documentation
+- Multiple export formats (Markdown and others)
 
-### Added
-- **Amazon Bedrock Integration**: Support for Amazon Bedrock AI models
-- **AI-Powered Descriptions**: AI-generated entry point descriptions
-- **Token Monitoring**: Comprehensive token usage tracking
-
-### Changed
-- **Model Selection**: Enhanced AI model selection capabilities
-- **Streaming Performance**: Better real-time data streaming of elements descriptions
-
-## [vision/0.3.0-preview05] - 2025-08-08
-
-### Improved
-- Enhanced error handling and logging consistency
-- Updated documentation and setup instructions
-
-## [vision/0.3.0-preview04] - 2025-08-08
-
-### Added
-- **Microsoft Semantic Kernel**: Full integration for enhanced AI capabilities
-- **GitHub Integration**: Context-aware analysis using GitHub repository information
-- **New Analysis Interface**: Enhanced analysis view for P3 models
-- **Improved Navigation**: Logo click navigation to home page
-
-### Changed
-- **Default AI Model**: Switched to Haiku as the default AI model
-- **Enhanced Context**: Improved context retrieval for better analysis
-
-## [vision/0.3.0-preview03] - 2025-08-06
-
-### Improved
-- Fixed Docker container publishing workflow
-- Enhanced container deployment reliability
-
-## [vision/0.3.0-preview02] - 2025-08-06
-
-### Added
-- **External Sources Support**: Support for external sources across projects
-- **Git Repository Integration**: Default branch support for Git configurations
-- **Enhanced Package Management**: Improved package restoration
-
-### Changed
-- **Project Structure**: Major project restructuring for better organization
-- **Container Publishing**: Enhanced Docker container publishing
-
-### Improved
-- Fixed FullAnalysis functionality stability
-- Enhanced configuration handling
-- Improved error handling for file operations
-
-## [vision/0.3.0-preview01] - 2025-07-31
-
-### Added
-- **.NET 9 Support**: Added .NET 9 SDK support
-- **Enhanced CI/CD**: Improved deployment pipeline
+**UX Improvements**
+- User interface enhancements
+- Better user experience across the application
+- Performance and responsiveness optimization
 
 ---
 

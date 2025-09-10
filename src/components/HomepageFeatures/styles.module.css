@@ -26,3 +26,19 @@
 .features a:visited {
   text-decoration: none !important;
 }
+
+/* Mobile spacing for feature blocks */
+@media screen and (max-width: 996px) {
+  .features .col {
+    margin-bottom: 3rem !important;
+  }
+  
+  .features .col:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Additional padding for the entire feature section */
+  .features {
+    padding: 3rem 0 !important;
+  }
+}
