@@ -6,7 +6,16 @@ sidebar_position: 1
 
 ## Introduction
 
-Noesis Vision is an advanced source code analysis system that scans your codebase according to provided conventions and creates a knowledge map (graph) called the P3 model. The system provides a web UI for browsing analysis results, which is our core functionality. Additionally, Noesis Vision offers optional AI integration for generating descriptions of P3 model elements using various language model providers.
+Noesis Vision is an advanced source code analysis system that scans your codebase according to provided conventions and creates a knowledge map (graph) called the P3 model. The system provides: 
+
+- **Noesis UI** for visual browsing of analysis results in the form of lists and diagrams
+- **Export functionality** to generate markdown documentation files for independent distribution (more export formats coming soon)
+
+Additionally, Noesis Vision offers optional AI integration for generating descriptions of P3 model elements using various language model providers. These descriptions become a vital part of the exported documentation and can also be viewed within the Noesis UI to improve understanding of diagram elements.
+
+:::info Important
+Noesis Vision operates exclusively as a containerized application using Docker. There is no standalone installation or native deployment option available at the moment.
+:::
 
 ## Core Functionality
 
