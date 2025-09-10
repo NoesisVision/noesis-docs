@@ -8,7 +8,7 @@ Check out how to use Noesis UI and generate static documentation pages to explor
 
 ## Noesis UI Overview
 
-TBD
+*Coming soon*
 
 ### Getting Help
 
