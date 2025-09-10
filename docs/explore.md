@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-# Explore
+# Exploring with Noesis UI
 
 Check out how to use Noesis UI and generate static documentation pages to explore and understand your code architecture.
 

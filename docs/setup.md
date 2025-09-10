@@ -2,32 +2,95 @@
 sidebar_position: 1
 ---
 
-# Noesis Vision - Container Configuration
+# Container Set-up
 
 ## Introduction
 
-Noesis Vision is an advanced source code analysis system with an optional AI integration that supports various language model providers. The system is designed as a containerized application with flexible configuration through environment variables.
+Noesis Vision is an advanced source code analysis system that scans your codebase according to provided conventions and creates a knowledge map (graph) called the P3 model. The system provides a web UI for browsing analysis results, which is our core functionality. Additionally, Noesis Vision offers optional AI integration for generating descriptions of P3 model elements using various language model providers.
 
-## Supported APIs and Models
+## Core Functionality
 
-### AWS Bedrock
+Noesis Vision's primary purpose is to analyze source code and create a comprehensive knowledge map that represents the relationships and dependencies within your codebase. This analysis is performed according to configurable conventions and rules, allowing you to understand the architecture and structure of your software system.
+
+### Key Features
+- **Code Scanning**: Analyzes source code according to predefined conventions
+- **P3 Model Generation**: Creates a knowledge graph representing code relationships
+- **Web UI**: Provides an intuitive interface for browsing analysis results
+- **Convention-Based Analysis**: Uses configurable rules to identify patterns and relationships
+
+### Required Configuration
+
+To run Noesis Vision for core functionality (without AI), you need to configure the following essential parameters:
+
+#### License Configuration
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NOESIS_NoesisLicenseFilePath` | Yes | Path to JWT license file |
+
+**Notes:**
+- License file must be in JWT format
+- In container, file must be mounted at `/license.jwt`
+- License is verified at application startup
+
+#### Feature Configuration
+
+| Variable | Required | Default Value | Description |
+|----------|----------|---------------|-------------|
+| `NOESIS_FeatureManagement__AdvancedMode` | No | `false` | Enables experimental features |
+| `NOESIS_FeatureManagement__FileUpload` | No | `false` | Enables file upload functionality |
+
+#### Logging Configuration
+
+| Variable | Required | Default Value | Description |
+|----------|----------|---------------|-------------|
+| `NOESIS_LogLevel` | No | `Information` | Logging level: `Debug`, `Information`, `Warning`, `Error` |
+
+### Running Noesis Vision (Core Functionality Only)
+
+To run Noesis Vision without AI integration, use the following Docker command:
+
+```bash
+docker run \
+  -v /path/to/config:/externalConfig:ro \
+  -v /path/to/sources:/externalSources:ro \
+  -v /path/to/data:/data \
+  -v /path/to/license.jwt:/license.jwt:ro \
+  -p 8080:8080 \
+  --rm \
+  ghcr.io/noesisvision/vision:latest
+```
+
+This configuration will:
+- Scan your codebase according to the conventions defined in `/externalConfig`
+- Generate the P3 model representing code relationships
+- Provide web UI accessible at `http://localhost:8080`
+- Store analysis results and cache in the `/data` volume
+
+## Optional AI Integration
+
+Noesis Vision can optionally integrate with various AI language models to generate descriptions of elements in the P3 model. This AI integration is completely optional and enhances the analysis with human-readable descriptions of code components.
+
+### Supported APIs and Models
+
+#### AWS Bedrock
 - **Claude 3.5 Haiku** (`us.anthropic.claude-3-5-haiku-20241022-v1:0`) - Fast model for basic tasks
 - **Llama 3 8B** (`us.meta.llama3-1-8b-instruct-v1:0`) - Compact Meta model
 - **Llama 3 70B** (`us.meta.llama3-3-70b-instruct-v1:0`) - Advanced Meta model
 - **Mistral Small** (`mistral.mistral-small-2402-v1:0`) - Mistral AI model
 
-### Fireworks AI
+#### Fireworks AI
 - **Qwen3 Coder 30B** (`accounts/fireworks/models/qwen3-coder-30b-a3b-instruct`) - Specialized coding model
 
-### Hugging Face
+#### Hugging Face
 - **Phi-4 Mini** - Compact Microsoft model (requires custom URL)
 - **Qwen Coder 7B** - Coding model (requires custom URL)
 
-## Container Configuration
+### AI Configuration
 
-Here are the environment variables which have to be set to use each of listed models.
+To enable AI integration, you need to configure the appropriate environment variables for your chosen AI provider and model.
 
-### AWS Bedrock Configuration
+#### AWS Bedrock Configuration
 
 | Variable | Required | Description |
 |----------|----------|-------------|
@@ -45,7 +108,7 @@ Here are the environment variables which have to be set to use each of listed mo
 - Required permissions: `bedrock:InvokeModel` for selected model
 - Claude 3.5 Haiku model is default supported in documentation
 
-### Fireworks AI Configuration
+#### Fireworks AI Configuration
 
 | Variable | Required | Description |
 |----------|----------|-------------|
@@ -59,7 +122,7 @@ Here are the environment variables which have to be set to use each of listed mo
 - Fireworks uses OpenAI-compatible API
 - Model is optimized for programming tasks
 
-### Hugging Face Configuration
+#### Hugging Face Configuration
 
 | Variable | Required | Description |
 |----------|----------|-------------|
@@ -77,35 +140,10 @@ Here are the environment variables which have to be set to use each of listed mo
 - Requires custom endpoint URL (can be Inference API or custom deployment)
 - Model must be available through Hugging Face API
 
-### License Configuration
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NOESIS_NoesisLicenseFilePath` | Yes | Path to JWT license file |
+### AI Integration Examples
 
-
-**Notes:**
-- License file must be in JWT format
-- In container, file must be mounted at `/license.jwt`
-- License is verified at application startup
-
-### Feature Configuration
-
-| Variable | Required | Default Value | Description |
-|----------|----------|---------------|-------------|
-| `NOESIS_FeatureManagement__AdvancedMode` | No | `false` | Enables experimental features |
-| `NOESIS_FeatureManagement__FileUpload` | No | `false` | Enables file upload functionality |
-
-### Logging Configuration
-
-| Variable | Required | Default Value | Description |
-|----------|----------|---------------|-------------|
-| `NOESIS_LogLevel` | No | `Information` | Logging level: `Debug`, `Information`, `Warning`, `Error` |
-
-
-## Usage Examples
-
-### AWS Bedrock with Claude 3.5 Haiku
+#### AWS Bedrock with Claude 3.5 Haiku
 
 ```bash
 docker run \
@@ -121,7 +159,7 @@ docker run \
   ghcr.io/noesisvision/vision:latest
 ```
 
-### Fireworks AI with Qwen3 Coder 30B
+#### Fireworks AI with Qwen3 Coder 30B
 
 ```bash
 docker run \
@@ -137,7 +175,7 @@ docker run \
   ghcr.io/noesisvision/vision:latest
 ```
 
-### Hugging Face with Phi-4 Mini
+#### Hugging Face with Phi-4 Mini
 
 ```bash
 docker run \
@@ -184,16 +222,18 @@ If using SELinux, add `:Z` modifiers to volumes:
 ```
 
 ### Performance
-1. **AI Models**: Choose model appropriate for your needs:
+1. **Core Functionality**: Noesis Vision performs code analysis and generates P3 models efficiently without AI
+2. **AI Models**: When using AI integration, choose model appropriate for your needs:
    - Claude 3.5 Haiku: fast and economical
    - Llama 3 70B: highest quality, slower
    - Qwen3 Coder 30B: specialized for coding
-2. **Cache**: `/data` volume stores cache, speeding up subsequent analyses.
+3. **Cache**: `/data` volume stores cache, speeding up subsequent analyses
 
 ### Troubleshooting
 1. **Missing License**: Check if `/license.jwt` file is properly mounted
-2. **AI Error**: Check API keys and model permissions
+2. **AI Error**: Check API keys and model permissions (only if using AI integration)
 3. **Missing Configuration**: Ensure `/externalConfig` contains proper .NET configuration
+4. **Core Functionality**: Noesis works without AI - check configuration and license first
 
 ## Next Steps
 
