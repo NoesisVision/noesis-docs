@@ -23,27 +23,29 @@ Before you begin, make sure you have:
 
 ## Step 1: Prepare Directory Structure
 
-We recommend creating the following directory structure:
+We recommend using the following directory structure:
 
 ```
 your-workspace/
 ├── noesis-workspace/
-│   ├── data/           # Noesis data (cache, results)
-│   └── license.jwt     # License file
+│   ├── data/           # Noesis data (cache, results) - empty folder
+│   └── license.jwt     # License file obtained from Noesis team
 ├── my-system-repo/     # Your .NET repository to analyze
 └── noesis-config/      # Noesis DSL configuration project
 ```
 
-```bash
-mkdir -p noesis-workspace/data
-# Copy your license file to noesis-workspace/license.jwt
-# Clone your .NET repository next to noesis-workspace
-# We'll create the configuration project in the next step
+At the beginning you will need :
+
+```
+your-workspace/
+├── noesis-workspace/
+│   ├── data/           # Noesis data (cache, results) - empty folder
+│   └── license.jwt     # License file obtained from Noesis team
 ```
 
 ## Step 2: Docker Authentication
 
-Before running Noesis, you need to authenticate with the Noesis Docker registry:
+Start Docker or make sure that it's up. Before running Noesis, you need to authenticate with the Noesis Docker registry:
 
 ```bash
 docker login ghcr.io -u noesis-packages
@@ -52,20 +54,24 @@ docker login ghcr.io -u noesis-packages
 
 ## Step 3: First Noesis Run
 
-Start by running the Noesis container without configuration to check if you can access the UI:
+Start by running the Noesis container without configuration to check if you can access the UI.
 
-```bash
+Make sure you are in the noesis-workspace directory:
+``` bash
 cd noesis-workspace
+```
 
+Run the basic docker command: 
+``` bash
 docker run \
   -v ./data:/data \
   -v ./license.jwt:/license.jwt:ro \
-  -p 3000:8080 \
+  -p 8088:8080 \
   --rm \
   ghcr.io/noesisvision/vision:latest
 ```
 
-Open your browser and navigate to `http://localhost:3000`. You should see the Noesis interface with example repositories.
+Open your browser and navigate to `http://localhost:8088`. You should see the Noesis interface with example repositories.
 
 🎉 **First Success!** Noesis is running and you can browse example projects.
 
@@ -112,14 +118,14 @@ docker run \
   -v ../my-system-repo:/externalSources:ro \
   -v ./data:/data \
   -v ./license.jwt:/license.jwt:ro \
-  -p 3000:8080 \
+  -p 8088:8080 \
   --rm \
   ghcr.io/noesisvision/vision:latest
 ```
 
 ### 4.4: Verify Modules
 
-1. Open `http://localhost:3000`
+1. Open `http://localhost:8088`
 2. Run a scan of your repository
 3. Go to the scan results and click **Modules** section - you should see modules created from your project's namespaces in the tree on the left.
 
@@ -171,7 +177,7 @@ docker run \
   -v ../my-system-repo:/externalSources:ro \
   -v ./data:/data \
   -v ./license.jwt:/license.jwt:ro \
-  -p 3000:8080 \
+  -p 8088:8080 \
   --rm \
   ghcr.io/noesisvision/vision:latest
 ```
@@ -233,7 +239,7 @@ docker run \
   -v ../my-system-repo:/externalSources:ro \
   -v ./data:/data \
   -v ./license.jwt:/license.jwt:ro \
-  -p 3000:8080 \
+  -p 8088:8080 \
   --rm \
   ghcr.io/noesisvision/vision:latest
 ```
