@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Quick Start
+# Getting Started
 
 This practical tutorial will walk you through configuring Noesis step by step. After completing it, you'll be able to **see** -  "See how your system REALLY works" 🙂
 
@@ -154,7 +154,9 @@ namespace NoesisConfig
 }
 ```
 
-Play with the DSL if you want. You should be able additional versions of methods e.g. allowing to specify repository branch (which might be useful if your primary branch is not `main`). Check if the project correctly compiles
+Play with the DSL if you want. You should be able additional versions of methods e.g. allowing to specify repository branch (which might be useful if your primary branch is not `main`). You may add multiple configuration files - they will be recognized by Noesis as separate systems to scan. 
+
+Check if the project correctly compiles - otherwise Noeis won't be able to work with it.
 
 ``` bash
 dotnet build
@@ -204,7 +206,9 @@ docker run \
     [10:05:15 INF] Full analysis for system DDD Starter Dotnet finished in 62.92s.
     ```
 3. Go back to the main page and click "Basic mode" to view  the scan results. Choose your result.
-4. Click **Modules** view - you should see modules created from your project's namespaces in the tree on the left, after you expand it
+4. Click **Modules** view - you should see modules created from your project's namespaces in the tree on the left, after you expand it. Here's how it may look like: 
+
+    ![Modules tree view](/img/modules.png)
 
 
 
@@ -214,46 +218,55 @@ docker run \
 
 Now we'll add entry points configuration - entry points to your system's business logic. These often correspond to REST API endpoints or command handling methods.
 
+:::info
+From now on, it might be worth knowing that **the architecture conventions examples presented in the code-snippets below were created according to the architecture of an opensource project [Grandnode2](https://github.com/grandnode/grandnode2)**. This information might help you compare what is the exact application code corresponding to the presented usages of Noesis DSL. In addition you can find a full configuration for this projects in our examples repository on [Github](https://github.com/NoesisVision)
+:::
+
 ### 5.1: Add Entry Points Configuration
 
 Update `ArchitectureConventions.cs`, adding entry points configuration. The configuration depends on your project patterns, but if you use typical `CommandHandlers` with method `Handle` it may look like that: 
 
 ```csharp
-using Noesis.Parser;
+using Noesis.Parser.CodeParsing.Configuration;
+using Noesis.Parser.Configuration;
+using Noesis.Tags;
 
 namespace NoesisConfig
 {
-    [FullAnalysisConfig]
-    public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
-        .System("My System")
-        .Repositories(repositories => repositories
-            .UseLocal("Main", "../my-system-repo"))
-        .Conventions(conventions => conventions
-            .ForDomainModules(convention => convention
-                .UseNamespaceHierarchy())
-            // Add Entry Points configuration
-            .ForDomainBehaviors(NoesisTags.Domain.EntryPoint, convention => convention
-                .UseMethods()  // Analyze individual methods
-                .FromTypes(types => types
-                    .OfKind(TypeKind.Class)  // Only classes
+    public static class Grandnode2Config
+    {
+         [FullAnalysisConfigAttribute]
+        public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
+            .System("My System")  // System name in documentation
+            .Repositories(repositories => repositories
+                .UseLocal("Main", "my-system-repo"))  // Path to your repository relative to externalSources dir
+            .Conventions(conventions => conventions
+                .ForDomainModules(convention => convention
+                    .UseNamespaceHierarchy())
+                // Add Entry Points configuration
+                .ForDomainBehaviors(NoesisTags.Domain.EntryPoint, convention => convention
+                    .UseMethods()  // Analyze individual methods
+                    .FromTypes(types => types
+                        .OfKind(TypeKind.Class)  // Only classes
                     .WithNameEndingWith("CommandHandler"))  // Handler naming convention
                 .WithName("Handle")  // Method must be named "Handle"
                 .SetName(method =>
-                    $"{method.ContainingType.Name.Replace("CommandHandler", string.Empty)}"
-                        .Humanize(LetterCasing.Title)))  // Create readable behavior name
-        .Build();
+                    $"{method.ContainingType.Name.Replace("CommandHandler", string.Empty)}")  // Create readable behavior name
+            )) // Creates modules from namespaces
+            .Build();
+    }
 }
 ```
-For more options on how to configure entry point detection please refer to the [Conventions Documentation](configure.md#entry-points-configuration)
+For more options on how to configure entry point detection please refer to the [Conventions Documentation](configure.md#entry-points-configuration). You may also check available 
 
 ### 5.2: Run with Entry Points Configuration
 
-Run the container again with updated configuration.
+At the moment, you need to restart container after every configuration change (we are plan to improve it in the near future).
 
 ```bash
 docker run \
-  -v ../noesis-config:/externalConfig:ro \
-  -v ../my-system-repo:/externalSources:ro \
+  -v $(pwd)/../git-repos/noesis-config:/externalConfig:ro \
+  -v $(pwd)/../git-repos:/externalSources:ro \
   -v ./data:/data \
   -v ./license.jwt:/license.jwt:ro \
   -p 8088:8080 \
@@ -263,9 +276,13 @@ docker run \
 
 ### 5.3: Verify Entry Points
 
-1. Run a new scan
-2. Go to the **Entry Points** section - you should see Handle methods inside modules in the tree on the left
-3. Check if entry points are assigned to appropriate modules
+1. Open `http://localhost:8088`
+2. Click "Analyze" an run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
+3. Go back to the main page and click "Basic mode" to view  the scan results. Choose your result.
+4. Click **Entry Points** view - you should see entry points organizsed in modules in the tree on the left, after you expand it.
+
+Here's how it may look like: 
+ ![Entry points view](/img/entry-points.png)
 
 🎉 **Third Success!** Noesis recognized entry points to your system and shows them in appropriate modules.
 
@@ -278,34 +295,40 @@ Finally, we'll add services configuration - business components used by entry po
 Update `ArchitectureConventions.cs`, adding services configuration:
 
 ```csharp
-using Noesis.Parser;
+using Noesis.Parser.CodeParsing.Configuration;
+using Noesis.Parser.Configuration;
+using Noesis.Tags;
 
 namespace NoesisConfig
 {
-    [FullAnalysisConfig]
-    public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
-        .System("My System")
-        .Repositories(repositories => repositories
-            .UseLocal("Main", "../my-system-repo"))
-        .Conventions(conventions => conventions
-            .ForDomainModules(convention => convention
-                .UseNamespaceHierarchy())
-            .ForDomainBehaviors(NoesisTags.Domain.EntryPoint, convention => convention
-                .UseMethods()  // Analyze individual methods
-                .FromTypes(types => types
-                    .OfKind(TypeKind.Class)  // Only classes
+    public static class Grandnode2Config
+    {
+         [FullAnalysisConfigAttribute]
+        public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
+            .System("My System")  // System name in documentation
+            .Repositories(repositories => repositories
+                .UseLocal("Main", "my-system-repo"))  // Path to your repository relative to externalSources dir
+            .Conventions(conventions => conventions
+                .ForDomainModules(convention => convention
+                    .UseNamespaceHierarchy())
+                     // Add Entry Points configuration
+                .ForDomainBehaviors(NoesisTags.Domain.EntryPoint, convention => convention
+                    .UseMethods()  // Analyze individual methods
+                    .FromTypes(types => types
+                        .OfKind(TypeKind.Class)  // Only classes
                     .WithNameEndingWith("CommandHandler"))  // Handler naming convention
-                .WithName("Handle")  // Method must be named "Handle"
-                .SetName(method =>
-                    $"{method.ContainingType.Name.Replace("CommandHandler", string.Empty)}"
-                        .Humanize(LetterCasing.Title)))  // Create readable behavior name
-            // Add Services configuration
-            .ForDomainObjects(NoesisTags.Domain.Service, convention => convention
-                .UseTypes()  // Analyze types
-                .WithNameEndingWith("Service")  // Interfaces ending with "Service"
-                .SetName(type => type.Name[1..])))  // Remove "I" prefix
-        .Build();
+                    .WithName("Handle")  // Method must be named "Handle"
+                    .SetName(method =>
+                        $"{method.ContainingType.Name.Replace("CommandHandler", string.Empty)}"))
+                // Add Services configuration
+                .ForDomainObjects(NoesisTags.Domain.Service, convention => convention
+                    .UseTypes()  // Analyze types
+                    .WithNameEndingWith("Service")  // Interfaces ending with "Service"
+                    .SetName(type => type.Name[1..])))  // Remove "I" prefix
+            .Build();
+    }
 }
+
 ```
 
 ### 6.2: Run with Full Configuration
@@ -314,8 +337,8 @@ Run the container with complete configuration:
 
 ```bash
 docker run \
-  -v ../noesis-config:/externalConfig:ro \
-  -v ../my-system-repo:/externalSources:ro \
+  -v $(pwd)/../git-repos/noesis-config:/externalConfig:ro \
+  -v $(pwd)/../git-repos:/externalSources:ro \
   -v ./data:/data \
   -v ./license.jwt:/license.jwt:ro \
   -p 8088:8080 \
@@ -325,9 +348,11 @@ docker run \
 
 ### 6.3: Verify Complete Visualization
 
-1. Run final scan
+1. Run the final scan
 2. Go to the **Entry Points** section in the newest scan result and click a plus icon of the entry points - you should see services from your system used by this entry point.
 3. Add another entry point from the list which potentially share some services with the first one. You should see what are the common services
+
+ ![Services view](/img/services.png)
 
 🎉 **Great Success!** You now have completed a first basic visualization of your system!
 
@@ -361,7 +386,8 @@ Now that you have basic visualization, you can:
 
 ## Need Help?
 
+- Get instant help on our [Discord server](https://discord.gg/QF5PMX4Dqg)
 - Check the [full installation guide](/docs/setup)
 - Review [configuration examples](/docs/configure)
-- Visit our [GitHub repository](https://github.com/noesisvision/noesis)
-- Join our [Discord community](https://discord.gg/QF5PMX4Dqg)
+- Visit our [GitHub repository](https://github.com/noesisvision)
+
