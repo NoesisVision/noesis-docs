@@ -28,13 +28,19 @@ We recommend using the following directory structure:
 ```
 your-workspace/
 ├── noesis-workspace/
-│   ├── data/           # Noesis data (cache, results) - empty folder
-│   └── license.jwt     # License file obtained from Noesis team
-├── my-system-repo/     # Your .NET repository to analyze
-└── noesis-config/      # Noesis DSL configuration project
+│   ├── data/                 # Noesis data (cache, results) - empty folder
+│   └── license.jwt           # License file obtained from Noesis team
+├── git-repos/                # Root directory with .NET git repositories to analyze
+├── git-repos/my-system-repo/ # Reposiotry which you want to analyze
+└── git-repos/noesis-config/  # Noesis DSL configuration project
 ```
+:::info TIP for organizing your repos
+On a local machine, **the easiest way to start is to create noesis-workspace next to your directory with the git repositories** (*obviously your git repository can be named differently than `git-repos`*). However, if you want to share only selected repos with Noesis, you may as well create a separate directory and put the scanned repos there. It is also a good practice if you want to scan different versions of git-repos than the ones which you currently modify. 
+:::
 
-At the beginning you will need :
+ `noesis-config` is a new .NET library with Noesis DSL which you will create as a part of this tutorial. We recommend that thhis config  eventualy becomes one of your git repositories, so it's a good idea to put it inside `git-repos` as well.
+
+Please note that for the first quick check you will need only:
 
 ```
 your-workspace/
@@ -43,9 +49,10 @@ your-workspace/
 │   └── license.jwt     # License file obtained from Noesis team
 ```
 
+
 ## Step 2: Docker Authentication
 
-Start Docker or make sure that it's up. Before running Noesis, you need to authenticate with the Noesis Docker registry:
+Start Docker or make sure that it's up and running. You need to authenticate with the Noesis Docker registry using `noesis-packages` as a username:
 
 ```bash
 docker login ghcr.io -u noesis-packages
@@ -77,10 +84,23 @@ Open your browser and navigate to `http://localhost:8088`. You should see the No
 
 ## Step 4: Basic Configuration - Domain Modules
 
-Now we'll configure Noesis to analyze your repository. Let's start by creating a basic configuration that will create domain modules from namespace hierarchy.
+Now we'll configure Noesis to analyze your repository. Let's start by creating a basic configuration that will detect domain modules according to namespace hierarchy.
+In order to acheive that you are going to configure two new volumes in the container: 
+- `externalSources` - it is a root directory of all the code repositories you want to scan 
+- `externalConfig` - is a path to .NET project where in Noesis DSL you will specify your scanning rules and architecture conventions
+
+### 4.0: Make sure the code for analysis is in `git-repos`
+
+Clone the .NET repo to the `git-repos` directory or make sure that it is available there. In the tutorial we will assume that your repo name is `my-system-repo`no
 
 ### 4.1: Create Configuration Project
 
+Now we will create a new configuration project `noesis-config` which we recommend to keep in git-repos as well. Make sure you are in the `git-repos` directory
+```bash 
+cd git-repos
+```
+
+Create a .NET library project named `noesis-config`:
 ```bash
 # Create configuration project next to noesis-workspace
 dotnet new classlib -n noesis-config
@@ -100,7 +120,7 @@ namespace NoesisConfig
     public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
         .System("My System")  // System name in documentation
         .Repositories(repositories => repositories
-            .UseLocal("Main", "../my-system-repo"))  // Path to your repository
+            .UseLocal("Main", "../my-system-repo"))  // Path to your repository relative to the externalSources dir
         .Conventions(conventions => conventions
             .ForDomainModules(convention => convention
                 .UseNamespaceHierarchy()))  // Creates modules from namespaces
@@ -109,13 +129,17 @@ namespace NoesisConfig
 ```
 
 ### 4.3: Run with Module Configuration
-
+Navigate back to noesis-workspace
 ```bash
 cd noesis-workspace
+```
 
+Run the docker command with the 2 new volumes added. **Please note that for `externalSources` you need to use root `git-repos` directory, not the full link to your repo!**
+
+```bash
 docker run \
-  -v ../noesis-config:/externalConfig:ro \
-  -v ../my-system-repo:/externalSources:ro \
+  -v ../git-repos/noesis-config:/externalConfig:ro \
+  -v ../git-repos:/externalSources:ro \
   -v ./data:/data \
   -v ./license.jwt:/license.jwt:ro \
   -p 8088:8080 \
@@ -126,7 +150,7 @@ docker run \
 ### 4.4: Verify Modules
 
 1. Open `http://localhost:8088`
-2. Run a scan of your repository
+2. Run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
 3. Go to the scan results and click **Modules** section - you should see modules created from your project's namespaces in the tree on the left.
 
 🎉 **Second Success!** Noesis recognized your system structure and created domain modules.
@@ -169,7 +193,7 @@ For more options on how to configure entry point detection please refer to the [
 
 ### 5.2: Run with Entry Points Configuration
 
-Run the container again with updated configuration:
+Run the container again with updated configuration.
 
 ```bash
 docker run \
