@@ -84,14 +84,28 @@ Open your browser and navigate to `http://localhost:8088`. You should see the No
 
 ## Step 4: Basic Configuration - Domain Modules
 
-Now we'll configure Noesis to analyze your repository. Let's start by creating a basic configuration that will detect domain modules according to namespace hierarchy.
-In order to acheive that you are going to configure two new volumes in the container: 
+Now we'll configure Noesis to analyze your repository and make the full use of directory structure presented in [Step 1](#step-1-prepare-directory-structure). 
+
+Let's start by creating a basic configuration that will detect domain modules according to namespace hierarchy.
+In order to acheive that, you are going to configure two new volumes in the container: 
 - `externalSources` - it is a root directory of all the code repositories you want to scan 
-- `externalConfig` - is a path to .NET project where in Noesis DSL you will specify your scanning rules and architecture conventions
+- `externalConfig` - is a path to a new  .NET project where you will specify your scanning rules and architecture conventions, using Noesis DSL
 
-### 4.0: Make sure the code for analysis is in `git-repos`
+### 4.0: Prepare code for analysis in `git-repos`
 
-Clone the .NET repo to the `git-repos` directory or make sure that it is available there. In the tutorial we will assume that your repo name is `my-system-repo`no
+Clone the .NET repo for analyis in the `git-repos` directory or make sure that it is already available there. In the tutorial we assume that your repo name is named `my-system-repo`
+
+```bash
+cd git-repos/my-system-repo
+git status
+```
+
+Make sure that the project in the repo can be succesfully compiled. It should be possible to make `dotnet restore` and `dotnet build` on this project. However you don't need to run these commands right now - just make sure they won't fail as Noesis scanning engine needs to run them independently on a repository copy to perform the succesful scan. 
+
+If you are not sure and want to be on the safe side run: 
+``` bash
+dotnet build
+```
 
 ### 4.1: Create Configuration Project
 
@@ -107,26 +121,45 @@ dotnet new classlib -n noesis-config
 cd noesis-config
 ```
 
+Now add .NET NuGet packages to the project and test that it compiles
+
+``` bash
+dotnet add package NoesisVision.Configuration --prerelease
+dotnet build
+```
+
 ### 4.2: Add Basic Module Configuration
 
-Create the `ArchitectureConventions.cs` file:
+Open the project in your IDE and create the `ArchitectureConventions.cs` file.
+
+**Remember to change `../my-system-repo` to the actual path to your project.**
 
 ```csharp
-using Noesis.Parser;
+using Noesis.Parser.Configuration;
 
 namespace NoesisConfig
 {
-    [FullAnalysisConfig]
-    public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
-        .System("My System")  // System name in documentation
-        .Repositories(repositories => repositories
-            .UseLocal("Main", "../my-system-repo"))  // Path to your repository relative to the externalSources dir
-        .Conventions(conventions => conventions
-            .ForDomainModules(convention => convention
-                .UseNamespaceHierarchy()))  // Creates modules from namespaces
-        .Build();
+    public static class ArchitectureConventions
+    {
+        [FullAnalysisConfigAttribute]
+        public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
+            .System("My System")  // System name in documentation
+            .Repositories(repositories => repositories
+                .UseLocal("Main", "my-system-repo"))  // Path to your repository relative to externalSources dir
+            .Conventions(conventions => conventions
+                .ForDomainModules(convention => convention
+                    .UseNamespaceHierarchy()))  // Creates modules from namespaces
+            .Build();
+    }
 }
 ```
+
+Play with the DSL if you want. You should be able additional versions of methods e.g. allowing to specify repository branch (which might be useful if your primary branch is not `main`). Check if the project correctly compiles
+
+``` bash
+dotnet build
+```
+
 
 ### 4.3: Run with Module Configuration
 Navigate back to noesis-workspace
@@ -134,12 +167,14 @@ Navigate back to noesis-workspace
 cd noesis-workspace
 ```
 
-Run the docker command with the 2 new volumes added. **Please note that for `externalSources` you need to use root `git-repos` directory, not the full link to your repo!**
+Run the docker command with the 2 new volumes added. 
+
+**Please note that for `externalSources` we use root `git-repos` directory, not the full link to your repo!**
 
 ```bash
 docker run \
-  -v ../git-repos/noesis-config:/externalConfig:ro \
-  -v ../git-repos:/externalSources:ro \
+  -v $(pwd)/../git-repos/noesis-config:/externalConfig:ro \
+  -v $(pwd)/../git-repos:/externalSources:ro \
   -v ./data:/data \
   -v ./license.jwt:/license.jwt:ro \
   -p 8088:8080 \
@@ -150,8 +185,28 @@ docker run \
 ### 4.4: Verify Modules
 
 1. Open `http://localhost:8088`
-2. Run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
-3. Go to the scan results and click **Modules** section - you should see modules created from your project's namespaces in the tree on the left.
+2. Click "Analyze" an run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
+    Correct logs should look similar to this ones: 
+    ```
+    [10:04:12 INF] Source code setup for system DDD Starter Dotnet started
+    [10:04:12 INF] Source code setup for system DDD Starter Dotnet finished in 0.02s.
+    [10:04:12 INF] Source code checkout for system DDD Starter Dotnet started
+    [10:04:12 INF] Source code checkout for system DDD Starter Dotnet finished in 0.25s.
+    [10:04:12 INF] Full analysis started for system DDD Starter Dotnet.
+    [10:04:12 INF] Building intermediate model started
+    [10:04:52 INF] Loading projects for repository Main started.
+    [10:05:08 INF] Loading projects for repository Main finished in 16.64s.
+    [10:05:15 INF] Building intermediate model finished in 62.35s.
+    [10:05:15 INF] Building P3 model started
+    [10:05:15 INF] Building P3 model finished in 0.34s.
+    [10:05:15 INF] Inferencing started
+    [10:05:15 INF] Inferencing finished in 0.06s.
+    [10:05:15 INF] Full analysis for system DDD Starter Dotnet finished in 62.92s.
+    ```
+3. Go back to the main page and click "Basic mode" to view  the scan results. Choose your result.
+4. Click **Modules** view - you should see modules created from your project's namespaces in the tree on the left, after you expand it
+
+
 
 🎉 **Second Success!** Noesis recognized your system structure and created domain modules.
 
