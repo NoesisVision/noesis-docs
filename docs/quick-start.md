@@ -38,7 +38,7 @@ your-workspace/
 On a local machine, **the easiest way to start is to create noesis-workspace next to your directory with the git repositories** (*obviously your git repository can be named differently than `git-repos`*). However, if you want to share only selected repos with Noesis, you may as well create a separate directory and put the scanned repos there. It is also a good practice if you want to scan different versions of git-repos than the ones which you currently modify. 
 :::
 
- `noesis-config` is a new .NET library with Noesis DSL which you will create as a part of this tutorial. We recommend that thhis config  eventualy becomes one of your git repositories, so it's a good idea to put it inside `git-repos` as well.
+ `noesis-config` is a new .NET library with Noesis DSL which you will create as a part of this tutorial. We recommend that this config eventually becomes one of your git repositories, so it's a good idea to put it inside `git-repos` as well.
 
 Please note that for the first quick check you will need only:
 
@@ -87,27 +87,27 @@ Open your browser and navigate to `http://localhost:8088`. You should see the No
 Now we'll configure Noesis to analyze your repository and make the full use of directory structure presented in [Step 1](#step-1-prepare-directory-structure). 
 
 Let's start by creating a basic configuration that will detect domain modules according to namespace hierarchy.
-In order to acheive that, you are going to configure two new volumes in the container: 
+In order to achieve that, you are going to configure two new volumes in the container: 
 - `externalSources` - it is a root directory of all the code repositories you want to scan 
 - `externalConfig` - is a path to a new  .NET project where you will specify your scanning rules and architecture conventions, using Noesis DSL
 
-### 4.0: Prepare code for analysis in `git-repos`
+### 4.1: Prepare code for analysis in `git-repos`
 
-Clone the .NET repo for analyis in the `git-repos` directory or make sure that it is already available there. In the tutorial we assume that your repo name is named `my-system-repo`
+Clone the .NET repo for analysis in the `git-repos` directory or make sure that it is already available there. In the tutorial we assume that your repo name is `my-system-repo`
 
 ```bash
 cd git-repos/my-system-repo
 git status
 ```
 
-Make sure that the project in the repo can be succesfully compiled. It should be possible to make `dotnet restore` and `dotnet build` on this project. However you don't need to run these commands right now - just make sure they won't fail as Noesis scanning engine needs to run them independently on a repository copy to perform the succesful scan. 
+Make sure that the project in the repo can be successfully compiled. It should be possible to make `dotnet restore` and `dotnet build` on this project. However you don't need to run these commands right now - just make sure they won't fail as Noesis scanning engine needs to run them independently on a repository copy to perform the successful scan. 
 
 If you are not sure and want to be on the safe side run: 
 ``` bash
 dotnet build
 ```
 
-### 4.1: Create Configuration Project
+### 4.2: Create Configuration Project
 
 Now we will create a new configuration project `noesis-config` which we recommend to keep in git-repos as well. Make sure you are in the `git-repos` directory
 ```bash 
@@ -128,7 +128,7 @@ dotnet add package NoesisVision.Configuration --prerelease
 dotnet build
 ```
 
-### 4.2: Add Basic Module Configuration
+### 4.3: Add Basic Module Configuration
 
 Open the project in your IDE and create the `ArchitectureConventions.cs` file.
 
@@ -156,14 +156,14 @@ namespace NoesisConfig
 
 Play with the DSL if you want. You should be able additional versions of methods e.g. allowing to specify repository branch (which might be useful if your primary branch is not `main`). You may add multiple configuration files - they will be recognized by Noesis as separate systems to scan. 
 
-Check if the project correctly compiles - otherwise Noeis won't be able to work with it.
+Check if the project correctly compiles - otherwise Noesis won't be able to work with it.
 
 ``` bash
 dotnet build
 ```
 
 
-### 4.3: Run with Module Configuration
+### 4.4: Run with Module Configuration
 Navigate back to noesis-workspace
 ```bash
 cd noesis-workspace
@@ -184,10 +184,10 @@ docker run \
   ghcr.io/noesisvision/vision:latest
 ```
 
-### 4.4: Verify Modules
+### 4.5: Verify Modules
 
 1. Open `http://localhost:8088`
-2. Click "Analyze" an run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
+2. Click "Analyze" and run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
     Correct logs should look similar to this ones: 
     ```
     [10:04:12 INF] Source code setup for system DDD Starter Dotnet started
@@ -205,8 +205,8 @@ docker run \
     [10:05:15 INF] Inferencing finished in 0.06s.
     [10:05:15 INF] Full analysis for system DDD Starter Dotnet finished in 62.92s.
     ```
-3. Go back to the main page and click "Basic mode" to view  the scan results. Choose your result.
-4. Click **Modules** view - you should see modules created from your project's namespaces in the tree on the left, after you expand it. Here's how it may look like: 
+3. Go back to the main page and click "Basic mode" to view the scan results. Choose your result.
+4. Click **Modules** view - you should see modules created from your project's namespaces in the tree on the left, after you expand it. Here's how it may look: 
 
     ![Modules tree view](/img/modules.png)
 
@@ -219,7 +219,7 @@ docker run \
 Now we'll add entry points configuration - entry points to your system's business logic. These often correspond to REST API endpoints or command handling methods.
 
 :::info
-From now on, it might be worth knowing that **the architecture conventions examples presented in the code-snippets below were created according to the architecture of an opensource project [Grandnode2](https://github.com/grandnode/grandnode2)**. This information might help you compare what is the exact application code corresponding to the presented usages of Noesis DSL. In addition you can find a full configuration for this projects in our examples repository on [Github](https://github.com/NoesisVision)
+From now on, it might be worth knowing that **the architecture conventions examples presented in the code-snippets below were created according to the architecture of an opensource project [Grandnode2](https://github.com/grandnode/grandnode2)**. This information might help you compare what is the exact application code corresponding to the presented usages of Noesis DSL. In addition you can find a full configuration for this projects in our examples repository on [Github](https://github.com/NoesisVision/noesis-config)
 :::
 
 ### 5.1: Add Entry Points Configuration
@@ -277,11 +277,11 @@ docker run \
 ### 5.3: Verify Entry Points
 
 1. Open `http://localhost:8088`
-2. Click "Analyze" an run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
-3. Go back to the main page and click "Basic mode" to view  the scan results. Choose your result.
-4. Click **Entry Points** view - you should see entry points organizsed in modules in the tree on the left, after you expand it.
+2. Click "Analyze" and run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
+3. Go back to the main page and click "Basic mode" to view the scan results. Choose your result.
+4. Click **Entry Points** view - you should see entry points organized in modules in the tree on the left, after you expand it.
 
-Here's how it may look like: 
+Here's how it may look: 
  ![Entry points view](/img/entry-points.png)
 
 🎉 **Third Success!** Noesis recognized entry points to your system and shows them in appropriate modules.
@@ -350,7 +350,7 @@ docker run \
 
 1. Run the final scan
 2. Go to the **Entry Points** section in the newest scan result and click a plus icon of the entry points - you should see services from your system used by this entry point.
-3. Add another entry point from the list which potentially share some services with the first one. You should see what are the common services
+3. Add another entry point from the list which potentially shares some services with the first one. You should see what are the common services.
 
  ![Services view](/img/services.png)
 
@@ -369,7 +369,7 @@ Congratulations! After completing this tutorial, you can **see**:
 
 Now that you have basic visualization, you can:
 
-- **[Configure advanced conventions](/docs/configure)** - customize architectural rules to your needs, add entities, repositories, commands, queries and DDD pattersn
+- **[Configure advanced conventions](/docs/configure)** - customize architectural rules to your needs, add entities, repositories, commands, queries and DDD patterns
 - **[Explore the interface](/docs/explore)** - learn to use all Noesis UI features
 - **[Add AI integration](/docs/setup#optional-llm-integration)** - enable component description generation
 
@@ -388,6 +388,6 @@ Now that you have basic visualization, you can:
 
 - Get instant help on our [Discord server](https://discord.gg/QF5PMX4Dqg)
 - Check the [full installation guide](/docs/setup)
-- Review [configuration examples](/docs/configure)
-- Visit our [GitHub repository](https://github.com/noesisvision)
+- Review [configuration documentation](/docs/configure)
+- Visit our [GitHub repository with config examples](https://github.com/NoesisVision/noesis-config)
 
