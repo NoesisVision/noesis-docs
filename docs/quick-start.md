@@ -7,9 +7,13 @@ sidebar_position: 1
 This practical tutorial will walk you through configuring Noesis step by step. After completing it, you'll be able to **see** -  "See how your system REALLY works" 🙂
 
 What you should expect:
-- **Your system visualization** in the form of domain modules
+- **Your system visualization** in the form of [P3 model elements](https://github.com/NoesisVision/P3-model/blob/main/Elements.md)
 - **Entry points** contained in these modules - often corresponding to REST endpoints or business logic entry points
 - **Service visualization** showing which services are used by each entry point and how they're interconnected
+
+:::info Understanding the P3 Model
+Understanding the [P3 model](https://github.com/NoesisVision/P3-model/blob/main/Elements.md) is crucial for effective Noesis configuration. The P3 model defines three key elements: **domain modules**, **domain objects**, and **domain behaviors** that form the foundation of how Noesis analyzes and visualizes your system architecture.
+:::
 
 ## Prerequisites
 
@@ -86,7 +90,7 @@ Open your browser and navigate to `http://localhost:8088`. You should see the No
 
 Now we'll configure Noesis to analyze your repository and make the full use of directory structure presented in [Step 1](#step-1-prepare-directory-structure). 
 
-Let's start by creating a basic configuration that will detect domain modules according to namespace hierarchy.
+Let's start by creating a basic configuration that will detect [domain modules](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-module) according to namespace hierarchy.
 In order to achieve that, you are going to configure two new volumes in the container: 
 - `externalSources` - it is a root directory of all the code repositories you want to scan 
 - `externalConfig` - is a path to a new  .NET project where you will specify your scanning rules and architecture conventions, using Noesis DSL
@@ -124,7 +128,7 @@ cd noesis-config
 Now add .NET NuGet packages to the project and test that it compiles
 
 ``` bash
-dotnet add package NoesisVision.Configuration --prerelease
+dotnet add package NoesisVision.Configuration
 dotnet build
 ```
 
@@ -135,7 +139,7 @@ Open the project in your IDE and create the `ArchitectureConventions.cs` file.
 **Remember to change `../my-system-repo` to the actual path to your project.**
 
 ```csharp
-using Noesis.Parser.Configuration;
+using NoesisVision.Parser.Configuration;
 
 namespace NoesisConfig
 {
@@ -153,6 +157,10 @@ namespace NoesisConfig
     }
 }
 ```
+
+:::info Important Note about Repositories
+The **Repositories** node in Noesis DSL refers to **version control repositories** (code repositories, Git repositories), not the Repository design pattern. This section configures where Noesis should look for your source code to analyze.
+:::
 
 Play with the DSL if you want. You should be able additional versions of methods e.g. allowing to specify repository branch (which might be useful if your primary branch is not `main`). You may add multiple configuration files - they will be recognized by Noesis as separate systems to scan. 
 
@@ -205,6 +213,9 @@ docker run \
     [10:05:15 INF] Inferencing finished in 0.06s.
     [10:05:15 INF] Full analysis for system DDD Starter Dotnet finished in 62.92s.
     ```
+    :::warning
+    You may see some compilation errors in the logs - DO NOT PANIC - probably these are compilation WARNINGS which are only displayed as errors by Roslyn. Please wait patientily for the final message about success or failure of project loading.
+    :::
 3. Go back to the main page and click "Basic mode" to view the scan results. Choose your result.
 4. Click **Modules** view - you should see modules created from your project's namespaces in the tree on the left, after you expand it. Here's how it may look: 
 
@@ -212,11 +223,13 @@ docker run \
 
 
 
+
+
 🎉 **Second Success!** Noesis recognized your system structure and created domain modules.
 
 ## Step 5: Entry Points Configuration
 
-Now we'll add entry points configuration - entry points to your system's business logic. These often correspond to REST API endpoints or command handling methods.
+Now we'll add entry points configuration - [domain behaviors](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-behavior) that represent entry points to your system's business logic. These often correspond to REST API endpoints or command handling methods.
 
 :::info
 From now on, it might be worth knowing that **the architecture conventions examples presented in the code-snippets below were created according to the architecture of an opensource project [Grandnode2](https://github.com/grandnode/grandnode2)**. This information might help you compare what is the exact application code corresponding to the presented usages of Noesis DSL. In addition you can find a full configuration for this projects in our examples repository on [Github](https://github.com/NoesisVision/noesis-config)
@@ -227,15 +240,15 @@ From now on, it might be worth knowing that **the architecture conventions examp
 Update `ArchitectureConventions.cs`, adding entry points configuration. The configuration depends on your project patterns, but if you use typical `CommandHandlers` with method `Handle` it may look like that: 
 
 ```csharp
-using Noesis.Parser.CodeParsing.Configuration;
-using Noesis.Parser.Configuration;
-using Noesis.Tags;
+using NoesisVision.Parser.CodeParsing.Configuration;
+using NoesisVision.Parser.Configuration;
+using NoesisVision.Tags;
 
 namespace NoesisConfig
 {
     public static class Grandnode2Config
     {
-         [FullAnalysisConfigAttribute]
+        [FullAnalysisConfigAttribute]
         public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
             .System("My System")  // System name in documentation
             .Repositories(repositories => repositories
@@ -288,16 +301,16 @@ Here's how it may look:
 
 ## Step 6: Services Configuration
 
-Finally, we'll add services configuration - business components used by entry points.
+Finally, we'll add services configuration - [domain objects](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-object) that represent business components used by entry points.
 
 ### 6.1: Add Services Configuration
 
 Update `ArchitectureConventions.cs`, adding services configuration:
 
 ```csharp
-using Noesis.Parser.CodeParsing.Configuration;
-using Noesis.Parser.Configuration;
-using Noesis.Tags;
+using NoesisVision.Parser.CodeParsing.Configuration;
+using NoesisVision.Parser.Configuration;
+using NoesisVision.Tags;
 
 namespace NoesisConfig
 {
@@ -328,8 +341,13 @@ namespace NoesisConfig
             .Build();
     }
 }
-
 ```
+
+:::info Important Note about Domain Objects
+**Domain Objects** in Noesis DSL can be **any objects from your code** - they are not limited to Domain Driven Design concepts. You can identify and tag various types of objects such as services, entities, repositories, commands, events, queries, controllers, or any other architectural components that are important in your system.
+
+For more information about the generic P3 model and its elements, see the [P3 Model Elements documentation](https://github.com/NoesisVision/P3-model/blob/main/Elements.md).
+:::
 
 ### 6.2: Run with Full Configuration
 

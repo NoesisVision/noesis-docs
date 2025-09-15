@@ -6,13 +6,24 @@ sidebar_position: 3
 
 Learn how to use Noesis DSL to set architectural patterns in your code, allowing Noesis to focus on key building blocks in your codebase.
 
+:::info Understanding the P3 Model is Key
+Understanding the [P3 model](https://github.com/NoesisVision/P3-model/blob/main/Elements.md) is crucial for effective Noesis configuration. The P3 model defines three key elements that form the foundation of how Noesis analyzes and visualizes your system architecture:
+- **[Domain Modules](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-module)** - logical groupings of related functionality
+- **[Domain Objects](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-object)** - key building blocks of your domain model
+- **[Domain Behaviors](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-behavior)** - operations or entry points in your system
+:::
+
 ## Noesis DSL Description
 
 Noesis DSL is a fluent API for configuring source code analysis. It consists of three main parts:
 
 1. **System** - defines the name of the analyzed system
 2. **Repositories** - configures code sources (local or remote Git repositories)
-3. **Conventions** - defines conventions for domain modules, domain objects, and domain behaviors
+3. **Conventions** - defines conventions for [domain modules](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-module), [domain objects](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-object), and [domain behaviors](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-behavior)
+
+:::info Important Note about Repositories
+The **Repositories** node in Noesis DSL refers to **version control repositories** (code repositories, Git repositories), not the Repository design pattern. This section configures where Noesis should look for your source code to analyze.
+:::
 
 ## Basic Configuration Examples
 
@@ -69,7 +80,7 @@ public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
 
 ## Entry Points Configuration
 
-Entry Points are a critical component of Noesis DSL configuration. The `NoesisTags.Domain.EntryPoint` tag is specially treated in the implementation and represents the main entry points into your system's business logic. These are typically methods that handle incoming requests, commands, or messages.
+Entry Points are a critical component of Noesis DSL configuration. The `NoesisTags.Domain.EntryPoint` tag is specially treated in the implementation and represents the main [domain behaviors](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-behavior) that serve as entry points into your system's business logic. These are typically methods that handle incoming requests, commands, or messages.
 
 ### Common Entry Points Patterns
 
@@ -408,7 +419,7 @@ Configures a local Git repository for analysis:
 The AnalyzersBuilder configures how Noesis identifies and categorizes different elements in your codebase. It has three main configuration areas: domain modules, domain objects, and domain behaviors.
 
 #### ForDomainModules
-Configures how domain modules are identified and created:
+Configures how [domain modules](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-module) are identified and created:
 
 ```csharp
 .ForDomainModules(convention => convention
@@ -418,7 +429,7 @@ Configures how domain modules are identified and created:
     .SkipNamespaceParts("Company", "Infrastructure"))  // Remove common prefixes
 ```
 
-**Purpose:** Domain modules represent logical groupings of related functionality in your system. They're typically created from namespace hierarchy but can be filtered and customized.
+**Purpose:** [Domain modules](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-module) represent logical groupings of related functionality in your system. They're typically created from namespace hierarchy but can be filtered and customized.
 
 **Configuration Methods:**
 - **UseNamespaceHierarchy**: Creates modules based on namespace structure
@@ -445,6 +456,12 @@ Configures how domain objects (entities, services, repositories, etc.) are ident
 
 **Purpose:** Domain objects represent the key building blocks of your domain model. They can be tagged for categorization and filtering in the generated documentation.
 
+:::info Important Note about Domain Objects
+**Domain Objects** in Noesis DSL can be **any objects from your code** - they are not limited to Domain Driven Design concepts. You can identify and tag various types of objects such as services, entities, repositories, commands, events, queries, controllers, or any other architectural components that are important in your system.
+
+For more information about the generic P3 model and its elements, see the [P3 Model Elements documentation](https://github.com/NoesisVision/P3-model/blob/main/Elements.md).
+:::
+
 **Configuration Methods:**
 - **UseTypes**: Analyzes types (classes, interfaces, etc.)
 - **OfKind**: Filters by type kind (Class, Interface, Enum, etc.)
@@ -453,7 +470,7 @@ Configures how domain objects (entities, services, repositories, etc.) are ident
 - **SetName**: Customizes the object name in documentation
 
 #### ForDomainBehaviors
-Configures how domain behaviors (entry points, operations, etc.) are identified:
+Configures how [domain behaviors](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-behavior) (entry points, operations, etc.) are identified:
 
 ```csharp
 .ForDomainBehaviors(NoesisTags.Domain.EntryPoint, convention => convention
@@ -464,7 +481,7 @@ Configures how domain behaviors (entry points, operations, etc.) are identified:
     .WithName("Handle"))  // Method name pattern
 ```
 
-**Purpose:** Domain behaviors represent operations or entry points in your system. They're typically identified by analyzing methods rather than entire types.
+**Purpose:** [Domain behaviors](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-behavior) represent operations or entry points in your system. They're typically identified by analyzing methods rather than entire types.
 
 **Configuration Methods:**
 - **UseMethods**: Analyzes individual methods
