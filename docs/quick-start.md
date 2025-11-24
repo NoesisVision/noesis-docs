@@ -139,7 +139,7 @@ Open the project in your IDE and create the `ArchitectureConventions.cs` file.
 **Remember to change `../my-system-repo` to the actual path to your project.**
 
 ```csharp
-using NoesisVision.Parser.Configuration;
+using NoesisVision.Scanner.Configuration;
 
 namespace NoesisConfig
 {
@@ -240,8 +240,8 @@ From now on, it might be worth knowing that **the architecture conventions examp
 Update `ArchitectureConventions.cs`, adding entry points configuration. The configuration depends on your project patterns, but if you use typical `CommandHandlers` with method `Handle` it may look like that: 
 
 ```csharp
-using NoesisVision.Parser.CodeParsing.Configuration;
-using NoesisVision.Parser.Configuration;
+using NoesisVision.Scanner.CodeParsing.Configuration;
+using NoesisVision.Scanner.Configuration;
 using NoesisVision.Tags;
 
 namespace NoesisConfig
@@ -308,8 +308,8 @@ Finally, we'll add services configuration - [domain objects](https://github.com/
 Update `ArchitectureConventions.cs`, adding services configuration:
 
 ```csharp
-using NoesisVision.Parser.CodeParsing.Configuration;
-using NoesisVision.Parser.Configuration;
+using NoesisVision.Scanner.CodeParsing.Configuration;
+using NoesisVision.Scanner.Configuration;
 using NoesisVision.Tags;
 
 namespace NoesisConfig
