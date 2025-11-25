@@ -170,6 +170,20 @@ Check if the project correctly compiles - otherwise Noesis won't be able to work
 dotnet build
 ```
 
+:::info Branch configuration
+If the project you configured has a default branch named something other than *main*, you must specify the branch name as the third argument in the system config.
+```csharp
+public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
+    .System("My System")  // System name in documentation
+    .Repositories(repositories => repositories
+         // Configured "develop" as a scanned branch 
+        .UseLocal("Main", "my-system-repo", "develop")) 
+    //(...)
+    .Build();
+```
+**Important**: when the repository path references a local directory, **the branch must already be checked out from the remote** before launching the scanner—it won't check out the branch from origin for you. This is only possible if you have configured a remote repository link with a Personal Access Token. 
+:::
+
 
 ### 4.4: Run with Module Configuration
 Navigate back to noesis-workspace
