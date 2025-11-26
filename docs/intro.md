@@ -65,9 +65,10 @@ Noesis transforms how teams approach complex software challenges:
 
 ## Quick Links
 
-- [Quick Start Guide](/docs/quick-start)
-- [Installation Guide](/docs/setup)
-- [Configuration Examples](/docs/configure)
+- [✨ Lightning Fast AI Setup](/docs/ai-setup) - Set up Noesis in minutes using AI agent
+- [Quick Start Guide](/docs/quick-start) - Manual step-by step guide to quickly make Noesis run locally
+- [Installation Guide](/docs/setup) - More detailed set-up instructions
+- [Configuration Examples](/docs/configure) - Manual for conventions DSL
 - [UI Overview](/docs/explore)
 - [Changelog](/docs/changelog)
 
@@ -75,7 +76,6 @@ Noesis transforms how teams approach complex software challenges:
 
 - Check our [troubleshooting guide](/docs/explore#troubleshooting)
 - Visit our [GitHub repository](https://github.com/noesisvision/noesis)
-- Read the [latest updates](/docs/changelog)
 - Join our [Discord community](https://discord.gg/noesis)
 
-Ready to get started? Begin with [Quick Start](/docs/quick-start) to get up and running in minutes.
+Ready to get started? Try our [✨ Lightning Fast AI Setup](/docs/ai-setup) to get Noesis configured in minutes, or follow the [manual Quick Start](/docs/quick-start) for step-by-step guidance.

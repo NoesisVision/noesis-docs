@@ -20,8 +20,8 @@ Understanding the [P3 model](https://github.com/NoesisVision/P3-model/blob/main/
 Before you begin, make sure you have:
 
 - **Docker** installed on your system
-- **Docker access token** obtained from Noesis team
-- **Noesis license file** (`.jwt`) obtained from Noesis team
+- **Docker access token** obtained from [Noesis Customer Portal](https://portal.noesis-vision.com)
+- **Noesis license file** (`.jwt`) obtained from [Noesis Customer Portal](https://portal.noesis-vision.com)
 - **A .NET 5+ repository** to analyze
 - **Basic knowledge** of Docker and .NET project structure
 

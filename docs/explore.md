@@ -14,7 +14,7 @@ Check out how to use Noesis UI and generate static documentation pages to explor
 
 - Check the [Changelog](/docs/changelog) for recent updates
 - Review configuration examples in the [Configure](/docs/configure) section
-- Contact support through the [GitHub repository](https://github.com/noesisvision/noesis)
+- Contact support through the [Discord](https://discord.gg/QF5PMX4Dqg)
 
 ## Next Steps
 
@@ -22,4 +22,4 @@ Now that you understand how to explore and generate documentation, you can:
 
 - Set up automated documentation generation
 - Integrate Noesis with your development workflow
-- Share your architecture documentation with your team or AI agents
+- Share your exported architecture documentation with your team or AI agents

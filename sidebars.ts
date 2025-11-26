@@ -15,9 +15,10 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
     'intro',
+    'ai-setup',
     'quick-start',
     'setup',
-    'configure', 
+    'configure',
     'explore',
     'changelog',
   ],
