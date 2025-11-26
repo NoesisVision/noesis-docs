@@ -150,6 +150,19 @@ The AI generates configuration based on detected patterns, but you can customize
 
 For advanced configuration options, see the [Configuration Guide](/docs/configure).
 
+### Verifying and Improving Conventions
+
+After the initial scan, if you notice that important architectural elements were not detected:
+
+1. **Open the noesis-setup folder** in your code editor (e.g., VS Code)
+2. **Review the detected conventions** in `noesis-config/ArchitectureConventions.cs`
+3. **Work with your AI coding assistant** to improve the conventions:
+   - Point out missing patterns you observe in your codebase
+   - Ask the agent to add detection rules for those patterns
+   - Iterate until all important elements are properly detected
+
+This collaborative approach ensures your Noesis configuration accurately reflects your architecture.
+
 ## Troubleshooting
 
 ### AI agent can't find patterns
