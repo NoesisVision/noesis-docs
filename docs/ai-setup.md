@@ -51,7 +51,7 @@ Use the setup instructions from noesis-setup.md
 
 **Example:**
 ```
-Set up Noesis Vision for the repository: https://github.com/grandnode/grandnode2
+Set up Noesis Vision for the repository: https://github.com/nopSolutions/nopCommerce.git
 
 Use the setup instructions from noesis-setup.md
 ```
