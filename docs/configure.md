@@ -414,6 +414,93 @@ Configures a local Git repository for analysis:
 - **ExcludeProjectsMatching**: Excludes projects matching a regex pattern
 - **IncludeOnlyProjectsFromSolutions**: Limits analysis to projects from specific solution files
 
+#### UseRemote
+Configures a remote Git repository for analysis:
+
+```csharp
+// GitHub repository
+.UseRemote("Name", GitRepositoryProvider.GitHub,
+    new Uri("https://github.com/org/repo.git"))
+
+// GitHub with branch and configuration
+.UseRemote("Name", GitRepositoryProvider.GitHub,
+    new Uri("https://github.com/org/repo.git"), "develop", repository => repository
+        .ExcludeProjects("Tests", "Build")
+        .IncludeOnlyProjectsFromSolutions("Main.sln"))
+
+// GitLab Cloud
+.UseRemote("Name", GitRepositoryProvider.GitLabCloud,
+    new Uri("https://gitlab.com/org/repo.git"))
+
+// Azure DevOps
+.UseRemote("Name", GitRepositoryProvider.AzureDevOps,
+    new Uri("https://dev.azure.com/org/project/_git/repo"))
+```
+
+**Parameters:**
+- **Name**: Identifier for the repository in documentation
+- **GitRepositoryProvider**: The Git hosting platform (GitHub, GitLabCloud, GitLabOnPrem, AzureDevOps, Other)
+- **Uri**: Full URL to the Git repository (must end with .git)
+- **branch**: Git branch to analyze (defaults to "main")
+- **configure**: Optional lambda to configure repository-specific settings
+
+**Available Providers:**
+- `GitRepositoryProvider.GitHub` - GitHub repositories
+- `GitRepositoryProvider.GitLabCloud` - GitLab.com repositories
+- `GitRepositoryProvider.GitLabOnPrem` - Self-hosted GitLab instances
+- `GitRepositoryProvider.AzureDevOps` - Azure DevOps repositories
+- `GitRepositoryProvider.Other` - Other Git hosting platforms
+
+**Authentication:** See [Authentication for Remote Repositories](#authentication-for-remote-repositories) section below for security setup.
+
+#### Authentication for Remote Repositories
+
+When using remote repositories, you need to provide authentication credentials via environment variables.
+
+:::danger SECURITY RECOMMENDATION
+**Always use Fine-Grained Personal Access Tokens with minimal permissions!**
+
+We **strongly recommend** configuring your Personal Access Token to:
+- ✅ Grant access **only to specific repositories** you want to analyze (not all repositories)
+- ✅ Use **read-only permissions** (repository contents: read-only)
+- ✅ Set **expiration dates** and rotate tokens regularly
+- ✅ Use **service accounts** or dedicated bot accounts for production deployments
+- ✅ **Never commit** tokens to source code or configuration files in version control
+
+**For GitHub:**
+- Use [Fine-grained Personal Access Tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token)
+- Select only specific repositories in "Repository access"
+- Grant only "Contents: Read-only" permission
+
+**For GitLab:**
+- Create tokens with `read_repository` scope only
+- If you scan only one repository use [Project Access Tokens](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html) for specific projects
+- Consider using bot/service accounts with limited access to selected repos
+
+**For Azure DevOps:**
+- Create [Personal Access Tokens](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate) with "Code: Read" scope only
+- Limit token to specific organizations/projects
+- Use dedicated service/bot accounts with PAT for production
+:::
+
+**Environment Variables Configuration:**
+
+Set the following environment variables:
+
+```bash
+# Required: Personal Access Token
+export NOESIS_Git__PAT="your_token_here"
+
+# Optional: Username (defaults to "pat" if not provided)
+export NOESIS_Git__Username="your-username"
+```
+
+**How it works:**
+- Noesis clones the remote repository to a temporary directory
+- Authentication happens automatically using the provided PAT
+- The PAT is used as the password in Git credentials
+- Repository is analyzed from the cloned copy
+
 ### AnalyzersBuilder
 
 The AnalyzersBuilder configures how Noesis identifies and categorizes different elements in your codebase. It has three main configuration areas: domain modules, domain objects, and domain behaviors.
