@@ -52,9 +52,38 @@ You must mount the following volumes:
 
 ### Application Configuration
 
-| Variable | Required | Default Value | Description | Example (from command above) |
-|----------|----------|---------------|-------------|------------------------------|
-| `NOESIS_LogLevel` | No | `Information` | Logging level: `Debug`, `Information`, `Warning`, `Error` | Not shown (uses default) |
+| Variable | Required | Default Value | Description |
+|----------|----------|---------------|-------------|
+| `NOESIS_Serilog__MinimumLevel__Default` | No | `Information` | Logging level: `Verbose`, `Debug`, `Information`, `Warning`, `Error`, `Fatal` |
+| `NOESIS_MSBuild__RestoreVerbosity` | No | `minimal` | MSBuild restore verbosity: `quiet`, `minimal`, `normal`, `detailed`, `diagnostic` |
+
+#### Logging Configuration
+
+**Log Levels (Serilog):**
+- `Information` - Standard production logging (default, recommended)
+- `Debug` - Detailed logging for troubleshooting (includes compilation statistics, detailed NuGet operations)
+- `Verbose` - Very detailed logging (includes all Debug plus additional low-level details)
+- `Warning` - Only warnings and errors
+- `Error` - Only errors
+
+**MSBuild Verbosity:**
+- `minimal` - Basic restore/build output (default, recommended for production)
+- `detailed` - Verbose output showing all operations (recommended for debugging restore issues)
+- `diagnostic` - Maximum verbosity for deep debugging
+
+**Example with debug logging:**
+```bash
+docker run \
+  -v /path/to/config:/externalConfig:ro \
+  -v /path/to/sources:/externalSources:ro \
+  -v /path/to/data:/data \
+  -v /path/to/license.jwt:/license.jwt:ro \
+  -e NOESIS_Serilog__MinimumLevel__Default=Debug \
+  -e NOESIS_MSBuild__RestoreVerbosity=detailed \
+  -p 3000:8080 \
+  --rm \
+  ghcr.io/noesisvision/vision:latest
+```
 
 ### Port Configuration
 
@@ -197,9 +226,76 @@ If using SELinux, add `:Z` modifiers to volumes:
 ```
 
 ### Troubleshooting
-1. **Missing License**: Check if the `/license.jwt` file is properly mounted.
-2. **AI Error**: Check API keys and model permissions (only if using AI integration).
-3. **Missing Configuration**: Ensure `/externalConfig` contains proper .NET configuration.
+
+#### Missing License
+Check if the `/license.jwt` file is properly mounted.
+
+#### AI Error
+Check API keys and model permissions (only if using AI integration).
+
+#### Missing Configuration
+Ensure `/externalConfig` contains proper .NET configuration.
+
+#### Private NuGet Feed Authentication
+
+If your analyzed codebase uses private NuGet feeds, you need to pass authentication credentials via environment variables.
+
+**Environment Variable Format:**
+```bash
+-e NuGetPackageSourceCredentials_<SOURCE_NAME>="Username=<USERNAME>;Password=<PAT>"
+```
+
+Where:
+- `<SOURCE_NAME>` - The name of your NuGet source as defined in `nuget.config`
+- `<USERNAME>` - Your username or "PAT" for Personal Access Tokens
+- `<PAT>` - Your Personal Access Token or password
+
+**Example:**
+```bash
+docker run \
+  -v /path/to/config:/externalConfig:ro \
+  -v /path/to/sources:/externalSources:ro \
+  -v /path/to/data:/data \
+  -v /path/to/license.jwt:/license.jwt:ro \
+  -e NuGetPackageSourceCredentials_PrivateNuGet="Username=PAT;Password=ghp_xxxxxxxxxxxxx" \
+  -p 3000:8080 \
+  --rm \
+  ghcr.io/noesisvision/vision:latest
+```
+
+**Debugging NuGet Issues:**
+
+If scanning hangs during "Building intermediate model" or NuGet restore fails:
+
+1. Enable detailed logging to see what's happening:
+```bash
+docker run \
+  -v /path/to/config:/externalConfig:ro \
+  -v /path/to/sources:/externalSources:ro \
+  -v /path/to/data:/data \
+  -v /path/to/license.jwt:/license.jwt:ro \
+  -e NuGetPackageSourceCredentials_PrivateNuGet="Username=PAT;Password=ghp_xxxxxxxxxxxxx" \
+  -e NOESIS_Serilog__MinimumLevel__Default=Debug \
+  -e NOESIS_MSBuild__RestoreVerbosity=detailed \
+  -p 3000:8080 \
+  --rm \
+  ghcr.io/noesisvision/vision:latest
+```
+
+2. Check the logs for:
+   - Which package is being restored when it hangs
+   - Authentication errors (401 Unauthorized)
+   - Network connectivity issues
+   - Timeout errors
+
+**Common Issues:**
+- **Credential variable name mismatch**: Ensure the `<SOURCE_NAME>` matches exactly with your `nuget.config`
+- **Token expired**: Regenerate your PAT if it expired
+- **Insufficient permissions**: Ensure the token has `read:packages` permission
+- **Network issues**: Check if the NuGet feed is accessible from the container
+
+**Security Note:**
+- Credential values are NEVER logged - only environment variable names are logged for debugging purposes
 
 ## Next Steps
 
