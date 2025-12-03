@@ -105,6 +105,14 @@ Noesis Vision can optionally integrate with various LLMs (Large Language Models)
 - **Llama 3 70B** (`us.meta.llama3-3-70b-instruct-v1:0`) - Advanced Meta model
 - **Mistral Small** (`mistral.mistral-small-2402-v1:0`) - Mistral AI model
 
+#### Azure OpenAI
+- **GPT-4o** - High quality model (recommended for production)
+- **GPT-4o Mini** - Faster and economical version
+- **GPT-4** - Legacy high-quality model
+- **GPT-5.1** - Latest generation models
+- **GPT-5.1 Codex** - Specialized for code understanding
+- Various other GPT-5 and Codex variants
+
 #### Fireworks AI
 - **Qwen3 Coder 30B** (`accounts/fireworks/models/qwen3-coder-30b-a3b-instruct`) - Specialized coding model
 
@@ -177,6 +185,46 @@ docker run \
   -e NOESIS_LLM=FireworksQwen3Coder30B \
   -e NOESIS_Fireworks__ApiKey=fw-... \
   -e NOESIS_Fireworks__Url=https://api.fireworks.ai/inference/v1 \
+  -p 3000:8080 \
+  --rm \
+  ghcr.io/noesisvision/vision:latest
+```
+
+#### Azure OpenAI Configuration
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NOESIS_Azure__ApiKey` | Yes | Azure OpenAI API key |
+| `NOESIS_Azure__Endpoint` | Yes | Azure OpenAI endpoint URL (e.g., `https://your-resource.openai.azure.com/`) |
+| `NOESIS_Azure__DeploymentName` | Yes | Azure OpenAI deployment name (as configured in Azure Portal) |
+
+**Recommended Models (for `NOESIS_LLM`):**
+- `AzureGpt4o` - GPT-4o (high quality, recommended for production)
+- `AzureGpt4oMini` - GPT-4o Mini (faster, economical)
+- `AzureGpt4` - GPT-4 (legacy, high quality)
+- `AzureGpt51` - GPT-5.1 (latest generation)
+- `AzureGpt51Codex` - GPT-5.1 Codex (specialized for code)
+- `AzureGpt51CodexMini` - GPT-5.1 Codex Mini (compact coding model)
+- `AzureGpt5` - GPT-5 (previous generation)
+- `AzureGpt5Mini` - GPT-5 Mini (compact model)
+- `AzureCodexMini` - Codex Mini (legacy coding model)
+
+**Notes:**
+- Azure OpenAI requires a deployment to be created in Azure Portal before use
+- The `DeploymentName` must match the name of your deployment in Azure
+- Endpoint URL should end with `/` and not include the deployment name
+
+**Example Docker command:**
+```bash
+docker run \
+  -v /path/to/config:/externalConfig:ro \
+  -v /path/to/sources:/externalSources:ro \
+  -v /path/to/data:/data \
+  -v /path/to/license.jwt:/license.jwt:ro \
+  -e NOESIS_LLM=AzureGpt4o \
+  -e NOESIS_Azure__ApiKey=your-api-key \
+  -e NOESIS_Azure__Endpoint=https://your-resource.openai.azure.com/ \
+  -e NOESIS_Azure__DeploymentName=gpt-4o \
   -p 3000:8080 \
   --rm \
   ghcr.io/noesisvision/vision:latest
