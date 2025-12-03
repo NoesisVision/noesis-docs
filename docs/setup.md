@@ -225,18 +225,7 @@ If using SELinux, add `:Z` modifiers to volumes:
 -v /path/to/data:/data:Z
 ```
 
-### Troubleshooting
-
-#### Missing License
-Check if the `/license.jwt` file is properly mounted.
-
-#### AI Error
-Check API keys and model permissions (only if using AI integration).
-
-#### Missing Configuration
-Ensure `/externalConfig` contains proper .NET configuration.
-
-#### Private NuGet Feed Authentication
+### Private NuGet Feed Authentication
 
 If your analyzed codebase uses private NuGet feeds, you need to pass authentication credentials via environment variables.
 
@@ -262,6 +251,18 @@ docker run \
   --rm \
   ghcr.io/noesisvision/vision:latest
 ```
+
+
+### Troubleshooting
+
+#### Missing License
+Check if the `/license.jwt` file is properly mounted.
+
+#### AI Error
+Check API keys and model permissions (only if using AI integration).
+
+#### Missing Configuration
+Ensure `/externalConfig` contains proper .NET configuration.
 
 **Debugging NuGet Issues:**
 
