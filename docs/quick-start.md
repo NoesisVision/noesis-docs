@@ -63,30 +63,7 @@ docker login ghcr.io -u noesis-packages
 # Enter your access token when prompted (obtained from Noesis team)
 ```
 
-## Step 3: First Noesis Run
-
-Start by running the Noesis container without configuration to check if you can access the UI.
-
-Make sure you are in the noesis-workspace directory:
-``` bash
-cd noesis-workspace
-```
-
-Run the basic docker command: 
-``` bash
-docker run \
-  -v ./data:/data \
-  -v ./license.jwt:/license.jwt:ro \
-  -p 8088:8080 \
-  --rm \
-  ghcr.io/noesisvision/vision:latest
-```
-
-Open your browser and navigate to `http://localhost:8088`. You should see the Noesis interface with example repositories.
-
-🎉 **First Success!** Noesis is running and you can browse example projects.
-
-## Step 4: Basic Configuration - Domain Modules
+## Step 3: Basic Configuration - Domain Modules
 
 Now we'll configure Noesis to analyze your repository and make the full use of directory structure presented in [Step 1](#step-1-prepare-directory-structure). 
 
@@ -95,7 +72,7 @@ In order to achieve that, you are going to configure two new volumes in the cont
 - `externalSources` - it is a root directory of all the code repositories you want to scan 
 - `externalConfig` - is a path to a new  .NET project where you will specify your scanning rules and architecture conventions, using Noesis DSL
 
-### 4.1: Prepare code for analysis in `git-repos`
+### 3.1: Prepare code for analysis in `git-repos`
 
 Clone the .NET repo for analysis in the `git-repos` directory or make sure that it is already available there. In the tutorial we assume that your repo name is `my-system-repo`
 
@@ -111,7 +88,7 @@ If you are not sure and want to be on the safe side run:
 dotnet build
 ```
 
-### 4.2: Create Configuration Project
+### 3.2: Create Configuration Project
 
 Now we will create a new configuration project `noesis-config` which we recommend to keep in git-repos as well. Make sure you are in the `git-repos` directory
 ```bash 
@@ -132,7 +109,7 @@ dotnet add package NoesisVision.Configuration
 dotnet build
 ```
 
-### 4.3: Add Basic Module Configuration
+### 3.3: Add Basic Module Configuration
 
 Open the project in your IDE and create the `ArchitectureConventions.cs` file.
 
@@ -181,11 +158,11 @@ public static FullAnalysisConfig Create() => FullAnalysisConfigBuilder
     //(...)
     .Build();
 ```
-**Important**: when the repository path references a local directory, **the branch must already be checked out from the remote** before launching the scanner—it won't check out the branch from origin for you. This is only possible if you have configured a remote repository link with a Personal Access Token. 
+**Important**: when the repository path references a local directory, **the branch must already be checked out from the remote** before launching the scanner—it won't check out the branch from origin for you. This is only possible if you have configured a [remote repository link with a Personal Access Token](https://noesisvision.github.io/noesis-docs/docs/configure#useremote).
 :::
 
 
-### 4.4: Run with Module Configuration
+### 3.4: Run with Module Configuration
 Navigate back to noesis-workspace
 ```bash
 cd noesis-workspace
@@ -206,7 +183,7 @@ docker run \
   ghcr.io/noesisvision/vision:latest
 ```
 
-### 4.5: Verify Modules
+### 3.5: Verify Modules
 
 1. Open `http://localhost:8088`
 2. Click "Analyze" and run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
@@ -239,9 +216,9 @@ docker run \
 
 
 
-🎉 **Second Success!** Noesis recognized your system structure and created domain modules.
+🎉 **First Success!** Noesis recognized your system structure and created domain modules.
 
-## Step 5: Entry Points Configuration
+## Step 4: Entry Points Configuration
 
 Now we'll add entry points configuration - [domain behaviors](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-behavior) that represent entry points to your system's business logic. These often correspond to REST API endpoints or command handling methods.
 
@@ -249,7 +226,7 @@ Now we'll add entry points configuration - [domain behaviors](https://github.com
 From now on, it might be worth knowing that **the architecture conventions examples presented in the code-snippets below were created according to the architecture of an opensource project [Grandnode2](https://github.com/grandnode/grandnode2)**. This information might help you compare what is the exact application code corresponding to the presented usages of Noesis DSL. In addition you can find a full configuration for this projects in our examples repository on [Github](https://github.com/NoesisVision/noesis-config)
 :::
 
-### 5.1: Add Entry Points Configuration
+### 4.1: Add Entry Points Configuration
 
 Update `ArchitectureConventions.cs`, adding entry points configuration. The configuration depends on your project patterns, but if you use typical `CommandHandlers` with method `Handle` it may look like that: 
 
@@ -286,7 +263,7 @@ namespace NoesisConfig
 ```
 For more options on how to configure entry point detection please refer to the [Conventions Documentation](configure.md#entry-points-configuration). You may also check available 
 
-### 5.2: Run with Entry Points Configuration
+### 4.2: Run with Entry Points Configuration
 
 At the moment, you need to restart container after every configuration change (we are plan to improve it in the near future).
 
@@ -301,23 +278,23 @@ docker run \
   ghcr.io/noesisvision/vision:latest
 ```
 
-### 5.3: Verify Entry Points
+### 4.3: Verify Entry Points
 
 1. Open `http://localhost:8088`
 2. Click "Analyze" and run a scan of your repository - the scanning may take a while - check logs for details and potential errors.
 3. Go back to the main page and click "Basic mode" to view the scan results. Choose your result.
 4. Click **Entry Points** view - you should see entry points organized in modules in the tree on the left, after you expand it.
 
-Here's how it may look: 
+Here's how it may look:
  ![Entry points view](/img/entry-points.png)
 
-🎉 **Third Success!** Noesis recognized entry points to your system and shows them in appropriate modules.
+🎉 **Second Success!** Noesis recognized entry points to your system and shows them in appropriate modules.
 
-## Step 6: Services Configuration
+## Step 5: Services Configuration
 
 Finally, we'll add services configuration - [domain objects](https://github.com/NoesisVision/P3-model/blob/main/Elements.md#domain-object) that represent business components used by entry points.
 
-### 6.1: Add Services Configuration
+### 5.1: Add Services Configuration
 
 Update `ArchitectureConventions.cs`, adding services configuration:
 
@@ -363,7 +340,7 @@ namespace NoesisConfig
 For more information about the generic P3 model and its elements, see the [P3 Model Elements documentation](https://github.com/NoesisVision/P3-model/blob/main/Elements.md).
 :::
 
-### 6.2: Run with Full Configuration
+### 5.2: Run with Full Configuration
 
 Run the container with complete configuration:
 
@@ -378,7 +355,7 @@ docker run \
   ghcr.io/noesisvision/vision:latest
 ```
 
-### 6.3: Verify Complete Visualization
+### 5.3: Verify Complete Visualization
 
 1. Run the final scan
 2. Go to the **Entry Points** section in the newest scan result and click a plus icon of the entry points - you should see services from your system used by this entry point.
